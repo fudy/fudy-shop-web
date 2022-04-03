@@ -2,23 +2,23 @@
   <div style="width: 400px"> 
     <h1 style="text-align:center">欢迎注册</h1>
     <a-card >
-        <a-form :model="formState" >
-            <a-form-item>
+        <a-form :model="formState" :rules="rules" ref="formRef">
+            <a-form-item name="userName">
                 <a-input v-model:value="formState.userName" placeholder="用户名" size="large">
                     <template #prefix><UserOutlined class="icon" /></template>
                 </a-input>
             </a-form-item>
-            <a-form-item >
-                <a-input v-model:value="formState.password" type="password" placeholder="密码" size="large">
+            <a-form-item name="password">
+                <a-input  v-model:value="formState.password" type="password" placeholder="密码" size="large">
                     <template #prefix><LockOutlined class="icon" /></template>
                 </a-input>
             </a-form-item>
-            <a-form-item >
-                <a-input v-model:value="formState.password" type="password" placeholder="确认密码" size="large">
+            <a-form-item name="confirmPassword">
+                <a-input v-model:value="formState.confirmPassword" type="password" placeholder="确认密码" size="large">
                     <template #prefix><LockOutlined class="icon" /></template>
                 </a-input>
             </a-form-item>
-            <a-form-item>
+            <a-form-item name="phone">
                 <a-input-search v-model:value="formState.phone" placeholder="手机号" size="large" @search="sendCaptcha" >
                 <template #enterButton>
                     <a-button >发送验证码</a-button>
@@ -26,7 +26,7 @@
                 <template #prefix><span class="icon" style="margin-right:10px">+86</span> </template>
                 </a-input-search>
             </a-form-item>
-            <a-form-item>
+            <a-form-item name="captcha">
                 <a-input v-model:value="formState.captcha" placeholder="验证码" size="large">
                     <template #prefix><SafetyOutlined class="icon" /></template>
                 </a-input>
@@ -39,9 +39,9 @@
   </div>
 </template>
 <script>
-import { defineComponent, reactive, toRaw } from 'vue';
+import { defineComponent, reactive, toRaw, ref } from 'vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
-
+      
 export default defineComponent({
   components: {
     UserOutlined,
@@ -49,6 +49,7 @@ export default defineComponent({
     LockOutlined
   },
   setup() {
+    const formRef = ref();
     const formState = reactive({
       userName: '',
       password: '',
@@ -56,14 +57,65 @@ export default defineComponent({
       phone:'',
       captcha: ''
     });
+    //表单校验规则
+    const rules = {
+      userName: [
+          { required: true, message: '用户名不能为空', trigger: 'blur'},
+          { min: 4, max:16, message: '用户名长度为4-16个字符', trigger: 'change'}
+      ],
+      password: [
+        { required: true, pattern: /^(?![^a-zA-Z]+$)(?!\D+$)/, message: '密码需要至少包含1位数字和1位字母', trigger: 'blur'},
+        { min: 6, message: '密码长度最少为6个字符', trigger: 'blur'}
+      ],   
+      confirmPassword: [
+        { required: true, message: '确认密码不能为空', trigger: 'blur'},
+        { asyncValidator(rule, value) {
+            return new Promise((resolve, reject) => {
+                if (value !== formState.password) {
+                    reject('两次密码输入不一致！');  // reject with error message
+                } else {
+                    resolve();
+                }
+            });
+          },
+          trigger:'blur'
+        }
+      ], 
+      phone: [
+        {
+          required: true,
+          pattern: /^1\d{10}$/,
+          message: '请输入正确的手机号',
+          trigger: 'blur',
+        }
+      ],
+      captcha: [
+        {
+          required: true,
+          message: '验证码不能为空',
+          trigger: 'blur',
+        }
+      ]
+    }
 
     const onSubmit = () => {
-      console.log('submit!', toRaw(formState));
+        formRef.value
+        .validate()
+        .then(() => {
+          console.log('values', formState, toRaw(formState));
+        })
+        .catch(error => {
+          console.log('error', error);
+        });
     };
+
     const sendCaptcha = () => {
        console.log('send captcha!', toRaw(formState));
     }
+
     return {
+      rules,
+      formRef,
       formState,
       onSubmit,
       sendCaptcha
