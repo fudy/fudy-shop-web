@@ -21,7 +21,7 @@
             <a-form-item name="phone">
                 <a-input-search v-model:value="formState.phone" placeholder="手机号" size="large" @search="sendCaptcha" >
                 <template #enterButton>
-                    <a-button >发送验证码</a-button>
+                    <a-button :loading="msmLoading" @click="sendCaptcha">{{sendCaptchaText}}</a-button>
                 </template>
                 <template #prefix><span class="icon" style="margin-right:10px">+86</span> </template>
                 </a-input-search>
@@ -82,12 +82,7 @@ export default defineComponent({
         }
       ], 
       phone: [
-        {
-          required: true,
-          pattern: /^1\d{10}$/,
-          message: '请输入正确的手机号',
-          trigger: 'blur',
-        }
+        { required: true, pattern: /^1\d{10}$/, message: '请输入正确的手机号', trigger: 'blur'}
       ],
       captcha: [
         {
@@ -97,6 +92,9 @@ export default defineComponent({
         }
       ]
     }
+
+    let msmLoading = ref(false);
+    let sendCaptchaText =  ref("发送验证码"); 
 
     const onSubmit = () => {
         formRef.value
@@ -109,12 +107,31 @@ export default defineComponent({
         });
     };
 
+    const invokeSendCaptcha = () => {
+        console.log('send captcha!', toRaw(formState));
+    }
+
     const sendCaptcha = () => {
-       console.log('send captcha!', toRaw(formState));
+        invokeSendCaptcha();
+        msmLoading.value = true;
+        let countDown = 60;
+        sendCaptchaText.value=countDown+"秒后重试"
+        countDown -= 1;
+        let id = setInterval(() => {
+            sendCaptchaText.value=countDown+"秒后重试"
+            countDown -= 1;
+            if(countDown<=0) {
+                clearInterval(id);
+                msmLoading.value = false;
+                sendCaptchaText.value = "重新发送"
+            }
+        }, 1000); 
     }
 
     return {
       rules,
+      msmLoading,
+      sendCaptchaText,
       formRef,
       formState,
       onSubmit,
