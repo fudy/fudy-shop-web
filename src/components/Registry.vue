@@ -2,6 +2,7 @@
   <div style="width: 400px"> 
     <h1 style="text-align:center">欢迎注册</h1>
     <a-card >
+
         <a-form :model="formState" :rules="rules" ref="formRef">
             <a-form-item name="userName">
                 <a-input v-model:value="formState.userName" placeholder="用户名" size="large">
@@ -32,16 +33,20 @@
                 </a-input>
             </a-form-item>
             <a-form-item>
-            <a-button type="primary" @click="onSubmit" size="large" block>立即注册</a-button>
+            <a-button :loading="registryLoading" type="primary" @click="onSubmit" size="large" block>立即注册</a-button>
             </a-form-item>
         </a-form>
+
+        <a-alert :message="errMessage" v-show="typeof errMessage == 'string' && errMessage.length > 0" type="error"  show-icon/>
     </a-card>
   </div>
 </template>
 <script>
 import { defineComponent, reactive, toRaw, ref } from 'vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
-      
+import { registerUser } from '../api/user'
+import { sendRegisterUserCaptcha } from '../api/captcha'
+
 export default defineComponent({
   components: {
     UserOutlined,
@@ -50,6 +55,7 @@ export default defineComponent({
   },
   setup() {
     const formRef = ref();
+    const errMessage = ref();
     const formState = reactive({
       userName: '',
       password: '',
@@ -94,13 +100,26 @@ export default defineComponent({
     }
 
     let msmLoading = ref(false);
+    let registryLoading = ref(false);
     let sendCaptchaText =  ref("发送验证码"); 
 
+    const invokeRegisterUser = () => {
+        registryLoading.value = true;
+        registerUser(formState, (res)=> {
+            registryLoading.value = false;
+            errMessage.value = res.success ? null : res.errMsg;
+        }, (err)=> {
+            registryLoading.value = false;
+            errMessage.value = err;
+        });
+    }
+
     const onSubmit = () => {
+        errMessage.value=null;
         formRef.value
         .validate()
         .then(() => {
-          console.log('values', formState, toRaw(formState));
+          invokeRegisterUser();
         })
         .catch(error => {
           console.log('error', error);
@@ -109,6 +128,15 @@ export default defineComponent({
 
     const invokeSendCaptcha = () => {
         console.log('send captcha!', toRaw(formState));
+        sendRegisterUserCaptcha({
+            phone:formState.phone,
+            captcha:formState.captcha,
+            type:'captcha-mock'
+        },(data)=> {
+            console.log(data);
+        },(err) => {
+            console.log(err);
+        })
     }
 
     const sendCaptcha = () => {
@@ -135,7 +163,9 @@ export default defineComponent({
       formRef,
       formState,
       onSubmit,
-      sendCaptcha
+      sendCaptcha,
+      errMessage,
+      registryLoading
     };
   },
 });
