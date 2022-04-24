@@ -1,21 +1,18 @@
-<script setup>
-import Registry from './components/Registry.vue'
-</script>
-
 <template>
-
-<div class="bk"> 
-  <Registry style="float:right;margin:50px 200px"/>
-</div>
+  <router-view></router-view>
 </template>
-
-<style scoped>
- .bk {
-   height:700px;
-   background-image: url('./assets/register.png');
-   background-repeat:repeat;
-
- }
+ 
+<script>
+export default {
+  name: 'App',
+  components: {
+  }
+}
+</script>
+ 
+<style>
+#app {
+  text-align: center;
+  color: #2c3e50;
+}
 </style>
-
-

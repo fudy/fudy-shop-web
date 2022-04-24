@@ -46,6 +46,7 @@ import { defineComponent, reactive, toRaw, ref } from 'vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
 import { registerUser } from '../api/user'
 import { sendRegisterUserCaptcha } from '../api/captcha'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   components: {
@@ -54,6 +55,7 @@ export default defineComponent({
     LockOutlined
   },
   setup() {
+    const router = useRouter();
     const formRef = ref();
     const errMessage = ref();
     const formState = reactive({
@@ -106,8 +108,13 @@ export default defineComponent({
     const invokeRegisterUser = () => {
         registryLoading.value = true;
         registerUser(formState, (res)=> {
-            registryLoading.value = false;
-            errMessage.value = res.success ? null : res.errMsg;
+            if(res.success) {
+                //注册成功，跳转到成功页
+                router.push({name:'registry-success'});
+            } else {
+                registryLoading.value = false;
+                errMessage.value = res.errMsg;
+            }
         }, (err)=> {
             registryLoading.value = false;
             errMessage.value = err;
