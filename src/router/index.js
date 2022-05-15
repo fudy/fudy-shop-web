@@ -2,6 +2,7 @@ import { createRouter,createWebHashHistory,createWebHistory} from "vue-router";
 
 const routes = [
   { path: "/", name:"index", component: () => import("../pages/index.vue")},
+  { path: "/login", name:"login", component: () => import("../pages/login.vue")},
   { path: "/registry",  name:"registry", component: () => import("../pages/registry.vue")},
   { path: "/registry-success", name:"registry-success", component: () => import("../pages/registry-success.vue")}
 ]
