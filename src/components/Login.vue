@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 400px"> 
-    <a-card >
+  <div style="margin:0px 30px"> 
+    
         <a-form :model="formState" :rules="rules" ref="formRef">
             <a-form-item name="userName">
                 <a-input v-model:value="formState.userName" placeholder="用户名" size="large">
@@ -17,7 +17,7 @@
             </a-form-item>
         </a-form>
         <a-alert :message="errMessage" v-show="typeof errMessage == 'string' && errMessage.length > 0" type="error"  show-icon/>
-    </a-card>
+    
   </div>
 </template>
 
@@ -50,7 +50,7 @@ const rules = {
 const invokeLogin = () => {
     login(formState, (res)=> {
         if(res.success) {
-            //注册成功，跳转到首页
+            //登录成功，跳转到首页
             router.push({name:'index'});
         } else {
             errMessage.value = res.errMsg;

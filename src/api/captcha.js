@@ -9,3 +9,12 @@ export const sendRegisterUserCaptcha = function (params, successHandler, errorHa
         errorHandler(err);
     })
 }
+
+export const sendLoginCaptcha = function (params, successHandler, errorHandler) {
+    const request = Object.assign({}, params, {type:'captcha-user-login'});
+    axios.post(API_BASE_URL+"captcha", request).then(res=>{
+        successHandler(res.data);
+    },err=>{
+        errorHandler(err);
+    })
+}
