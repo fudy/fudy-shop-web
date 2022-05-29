@@ -24,3 +24,11 @@ export const smsLogin = function (params, successHandler, errorHandler) {
         errorHandler(err.message);
     })
 }
+
+export const modifyPassword = function (params, successHandler, errorHandler) {
+    axios.post(API_BASE_URL+"user/password", params).then(res=>{
+        successHandler(res.data);
+    },err=>{
+        errorHandler(err.message);
+    })
+}

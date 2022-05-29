@@ -17,7 +17,10 @@
             </a-form-item>
         </a-form>
         <a-alert :message="errMessage" v-show="typeof errMessage == 'string' && errMessage.length > 0" type="error"  show-icon/>
-    
+        <div style="text-align:right;margin-bottom:15px">
+            <router-link to="/forget_password">忘记密码</router-link> | 
+            <router-link to="/registry">用户注册</router-link>
+        </div>
   </div>
 </template>
 
