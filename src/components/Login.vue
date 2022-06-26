@@ -12,6 +12,20 @@
                     <template #prefix><LockOutlined class="icon" /></template>
                 </a-input>
             </a-form-item>
+            <a-form-item name="imageCaptcha">        
+                <a-input-group size="large">
+                    <a-row :gutter="8">
+                        <a-col :span="15">
+                            <a-input  v-model:value="formState.imageCaptcha" placeholder="验证码" size="large">
+                                <template #prefix><SafetyOutlined class="icon" /></template>
+                            </a-input>
+                        </a-col>
+                        <a-col :span="1">
+                            <img :src="imageSrc" style="cursor: pointer;" title="看不清？换一张" @click="imageClick" />
+                        </a-col>
+                    </a-row>
+                </a-input-group>
+            </a-form-item>
             <a-form-item>
                 <a-button type="primary" @click="onSubmit" size="large" block>登录</a-button>
             </a-form-item>
@@ -29,15 +43,18 @@ import { defineComponent, reactive, toRaw, ref } from 'vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { login } from '../api/user';
+import {IMAGE_CAPTCHA_SRC} from '../api/captcha';
 
 const formState = reactive({
     userName: '',
-    password: ''
+    password: '',
+    imageCaptch:''
 });
 
 const formRef = ref();
 const router = useRouter();
 const errMessage = ref();
+const imageSrc = ref(IMAGE_CAPTCHA_SRC);
 //表单校验规则
 const rules = {
     userName: [
@@ -47,6 +64,9 @@ const rules = {
     password: [
     { required: true, pattern: /^(?![^a-zA-Z]+$)(?!\D+$)/, message: '密码需要至少包含1位数字和1位字母', trigger: 'blur'},
     { min: 6, message: '密码长度最少为6个字符', trigger: 'blur'}
+    ],
+    imageCaptcha: [
+        { required: true, message: '验证码不能为空', trigger: 'blur'},
     ]
 }
 
@@ -72,6 +92,11 @@ const onSubmit = () => {
         errMessage.value=error;
     });
 };
+
+const imageClick = () => {
+    //每次点击，生成一个新的链接(修改时间戳)，从而触发验证码重新渲染
+    imageSrc.value = IMAGE_CAPTCHA_SRC + "?t="+ new Date().getTime();
+}
 
 </script>
 

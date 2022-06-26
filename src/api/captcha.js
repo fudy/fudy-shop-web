@@ -27,3 +27,5 @@ export const sendForgetPasswordCaptcha = function (params, successHandler, error
         errorHandler(err);
     })
 }
+
+export const IMAGE_CAPTCHA_SRC = API_BASE_URL + "image-captcha"
