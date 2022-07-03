@@ -40,6 +40,7 @@
 
 <script setup>
 import { defineComponent, reactive, toRaw, ref } from 'vue';
+import { message } from 'ant-design-vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { sendForgetPasswordCaptcha } from '../api/captcha';
@@ -100,9 +101,11 @@ const invokeSendCaptcha = () => {
         phone:formState.phone,
         captcha:formState.captcha
     },(data)=> {
-        console.log(data);
+        if(!data.success) {
+            message.error(data.errMsg);
+        }
     },(err) => {
-        console.log(err);
+        message.error(err);
     })
 }
 

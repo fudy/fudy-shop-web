@@ -23,7 +23,8 @@
 </template>
 <script setup>
 import { reactive, ref } from 'vue';
-import { sendLoginCaptcha } from '../api/captcha'
+import { sendLoginCaptcha } from '../api/captcha';
+import { message } from 'ant-design-vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
 import { smsLogin } from '../api/user';
 import { useRouter } from 'vue-router';
@@ -57,9 +58,11 @@ const invokeSendCaptcha = () => {
         phone:formState.phone,
         captcha:formState.captcha
     },(data)=> {
-        console.log(data);
+        if(!data.success) {
+            message.error(data.errMsg);
+        }
     },(err) => {
-        console.log(err);
+        message.error(data.errMsg);
     })
 }
 

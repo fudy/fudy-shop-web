@@ -1,7 +1,7 @@
 <template>
   <div style="width: 400px"> 
     <h1 style="text-align:center">欢迎注册</h1>
-    <a-card >
+    <a-card class="box">
 
         <a-form :model="formState" :rules="rules" ref="formRef">
             <a-form-item name="userName">
@@ -20,9 +20,9 @@
                 </a-input>
             </a-form-item>
             <a-form-item name="phone">
-                <a-input-search v-model:value="formState.phone" placeholder="手机号" size="large" @search="sendCaptcha" >
+                <a-input-search v-model:value="formState.phone" placeholder="手机号" size="large" @search="clickSendCaptcha" >
                 <template #enterButton>
-                    <a-button :loading="msmLoading" @click="sendCaptcha">{{sendCaptchaText}}</a-button>
+                    <a-button :loading="msmLoading">{{sendCaptchaText}}</a-button>
                 </template>
                 <template #prefix><span class="icon" style="margin-right:10px">+86</span> </template>
                 </a-input-search>
@@ -38,6 +38,10 @@
         </a-form>
 
         <a-alert :message="errMessage" v-show="typeof errMessage == 'string' && errMessage.length > 0" type="error"  show-icon/>
+        <div style="text-align:right;margin-bottom:15px">
+            <router-link to="/forget_password">忘记密码</router-link> | 
+            <router-link to="/login">用户登录</router-link>
+        </div>
     </a-card>
   </div>
 </template>
@@ -47,6 +51,7 @@ import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue
 import { registerUser } from '../api/user'
 import { sendRegisterUserCaptcha } from '../api/captcha'
 import { useRouter } from 'vue-router'
+import { message } from 'ant-design-vue';
 
 export default defineComponent({
   components: {
@@ -134,16 +139,27 @@ export default defineComponent({
     };
 
     const invokeSendCaptcha = () => {
-        console.log('send captcha!', toRaw(formState));
         sendRegisterUserCaptcha({
             phone:formState.phone,
             captcha:formState.captcha,
             type:'captcha-mock'
         },(data)=> {
-            console.log(data);
+          if(!data.success) {
+              message.error(data.errMsg);
+          }
         },(err) => {
-            console.log(err);
+            message.error(data.errMsg);
         })
+    }
+
+    const clickSendCaptcha = () => {
+        formRef.value
+        .validate(['phone'])
+        .then(() => {
+            sendCaptcha();
+        }).catch(error => {
+          console.log('error', error);
+        });
     }
 
     const sendCaptcha = () => {
@@ -169,6 +185,7 @@ export default defineComponent({
       sendCaptchaText,
       formRef,
       formState,
+      clickSendCaptcha,
       onSubmit,
       sendCaptcha,
       errMessage,
@@ -180,5 +197,8 @@ export default defineComponent({
 <style scoped>
 .icon {
     color: rgba(0, 0, 0, 0.25) 
+}
+.box {
+  border-radius: 5px;
 }
 </style>

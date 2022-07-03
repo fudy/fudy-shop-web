@@ -18,6 +18,14 @@ export const login = function (params, successHandler, errorHandler) {
     })
 }
 
+export const logout = function (successHandler, errorHandler) {
+    axios.post(API_BASE_URL+"user/logout").then(res=>{
+        successHandler(res.data);
+    },err=>{
+        errorHandler(err.message);
+    })
+}
+
 export const smsLogin = function (params, successHandler, errorHandler) {
     axios.post(API_BASE_URL+"user/sms-login", params).then(res=>{
         successHandler(res.data);

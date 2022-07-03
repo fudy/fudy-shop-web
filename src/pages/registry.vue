@@ -13,5 +13,6 @@ import Registry from '../components/Registry.vue'
    height:700px;
    background-image: url('../assets/register.png');
    background-repeat:repeat;
+
 }
 </style>
