@@ -25,7 +25,7 @@
 </template>
 <script setup>
   import { onMounted,reactive,ref} from 'vue';
-  import { getLoginUser, logout} from '../api/user';
+  import { getLoginUser, logout} from '../../api/user';
   import { useRouter } from 'vue-router';
   import { ShoppingCartOutlined,HeartOutlined,CustomerServiceOutlined, ShoppingOutlined} from '@ant-design/icons-vue';
   const router = useRouter();

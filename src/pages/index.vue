@@ -8,9 +8,9 @@
   </a-layout>
 </template>
 <script setup>
-  import HomePageHeader from '../components/HomePageHeader.vue'
-  import HomePageContent from '../components/HomePageContent.vue'
-  import HomePageFooter from '../components/HomePageFooter.vue'
+  import HomePageHeader from '../components/home/HomePageHeader.vue'
+  import HomePageContent from '../components/home/HomePageContent.vue'
+  import HomePageFooter from '../components/home/HomePageFooter.vue'
 </script>
 
 
