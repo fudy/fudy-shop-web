@@ -18,7 +18,13 @@
             </a-row>
             <!--今日特价广告位-->
             <a-row>
-               <ImageMock width="300px" height="188px" bgcolor="green" >今日特价</ImageMock>
+                <div class="ad-box">
+                <a-carousel autoplay>
+                    <ImageMock width="300px" height="188px" bgcolor="green" >今日特价1</ImageMock>
+                    <ImageMock width="300px" height="188px" bgcolor="red" >今日特价2</ImageMock>
+                    <ImageMock width="300px" height="188px" bgcolor="blue" >今日特价3</ImageMock>
+                </a-carousel>
+                </div>
             </a-row>
         </a-space>
     </div> 
@@ -35,6 +41,9 @@ import  ImageMock  from '../ImageMock.vue';
 }
 .user-info-box h2{
     color:#666;
+}
+.ad-box {
+    width: 300px;
 }
 
 </style>

@@ -34,8 +34,8 @@
                         <a-col>
                             <ImageMock width="300px" height="400px" bgcolor="#f00" >商品类目</ImageMock>
                         </a-col>
-                        <a-col flex="auto">
-                            <ImageMock width="100%" height="400px" bgcolor="#00f" >首页广告</ImageMock>
+                        <a-col >
+                            <HomePageAd />
                         </a-col>
                         <a-col>
                             <HomePageUserInfo />
@@ -62,7 +62,8 @@
 </template>
 <script setup>
 import  ImageMock  from '../ImageMock.vue';
-import HomePageUserInfo from '../home/HomePageUserInfo.vue'
+import HomePageUserInfo from '../home/HomePageUserInfo.vue';
+import HomePageAd from '../home/HomePageAd.vue'
 import { onMounted,reactive,ref} from 'vue';
 let value = ref("");
 function onSearch() {
