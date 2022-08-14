@@ -32,7 +32,7 @@
                 <div >
                     <a-row type="flex" :gutter="30" justify="space-between">
                         <a-col>
-                            <ImageMock width="300px" height="400px" bgcolor="#f00" >商品类目</ImageMock>
+                            <HomePageCategory />
                         </a-col>
                         <a-col >
                             <HomePageAd />
@@ -63,7 +63,9 @@
 <script setup>
 import  ImageMock  from '../ImageMock.vue';
 import HomePageUserInfo from '../home/HomePageUserInfo.vue';
-import HomePageAd from '../home/HomePageAd.vue'
+import HomePageAd from '../home/HomePageAd.vue';
+import HomePageCategory from '../home/HomePageCategory.vue';
+
 import { onMounted,reactive,ref} from 'vue';
 let value = ref("");
 function onSearch() {
