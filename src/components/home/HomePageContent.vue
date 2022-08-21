@@ -44,17 +44,14 @@
                 </div>
                 <div>
                     <h1>猜你喜欢</h1>
-                    <a-row type="flex" :gutter="30" justify="space-around">
-                        <a-col><ImageMock width="300px" height="300px" bgcolor="#a1a1a1" >商品1</ImageMock>
-                        </a-col>
-                        <a-col><ImageMock width="300px" height="300px" bgcolor="#a1a1a1" >商品2</ImageMock>
-                        </a-col>
-                        <a-col><ImageMock width="300px" height="300px" bgcolor="#a1a1a1" >商品3</ImageMock>
-                        </a-col>
-                        <a-col><ImageMock width="300px" height="300px" bgcolor="#a1a1a1" >商品4</ImageMock>
-                        </a-col>
-                    </a-row>
-
+                      <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList">
+                        <template #renderItem="{ item }">
+                            <a-list-item>
+                                <HomePageItem :price="item.price" :title="item.title"/>
+                            </a-list-item>
+                        </template>
+                    </a-list>
+                    
                 </div>
             </div>
         </div>
@@ -65,8 +62,17 @@ import  ImageMock  from '../ImageMock.vue';
 import HomePageUserInfo from '../home/HomePageUserInfo.vue';
 import HomePageAd from '../home/HomePageAd.vue';
 import HomePageCategory from '../home/HomePageCategory.vue';
+import HomePageItem from '../home/HomePageItem.vue';
 
 import { onMounted,reactive,ref} from 'vue';
+const itemList = [
+    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥1499'},
+    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2689'},
+    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2599'},
+    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2299'},
+    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2689'},
+    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2599'}
+]
 let value = ref("");
 function onSearch() {
     //TODO
@@ -83,5 +89,8 @@ function onSearch() {
 }
 .search-text span {
     margin-left : 5px;
+}
+.item-row {
+    margin: 15px 5px;
 }
 </style>

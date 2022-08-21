@@ -59,7 +59,7 @@
   color: grey;
 }
 .header-user {
-  position: fixed;
+  position: absolute;
   left: 20%;
 }
 .header-user a{
@@ -68,7 +68,7 @@
   margin-left: 5px;
 }
 .header-other {
-  position: fixed;
+  position: absolute;
   left: 60%;
 }
 .header-other a {
