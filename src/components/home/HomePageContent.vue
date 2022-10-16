@@ -45,9 +45,9 @@
                 <div>
                     <h1>猜你喜欢</h1>
                       <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList">
-                        <template #renderItem="{ item }">
+                        <template #renderItem="{ item }" v-if="itemList.length>0">
                             <a-list-item>
-                                <HomePageItem :price="item.price" :title="item.title"/>
+                                <HomePageItem :price="item.price" :title="item.name"/>
                             </a-list-item>
                         </template>
                     </a-list>
@@ -63,20 +63,30 @@ import HomePageUserInfo from '../home/HomePageUserInfo.vue';
 import HomePageAd from '../home/HomePageAd.vue';
 import HomePageCategory from '../home/HomePageCategory.vue';
 import HomePageItem from '../home/HomePageItem.vue';
+import {invokeGetItemList} from '../../api/item';
 
 import { onMounted,reactive,ref} from 'vue';
-const itemList = [
-    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥1499'},
-    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2689'},
-    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2599'},
-    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2299'},
-    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2689'},
-    {title : '【正品保障】贵州茅台酒 53度飞天茅台500ml 酱香型白酒',price:'¥2599'}
-]
+const itemList = ref([]);
 let value = ref("");
 function onSearch() {
     //TODO
 }
+const getItemList = function() {
+    invokeGetItemList({pageIndex:0, pageSize: 12}, (result)=> {
+        if(result && result.data.length > 0) {
+            for(let item of result.data) {
+                itemList.value.push(item);
+            }
+        }
+    }, (e)=> {
+        console.log(e);
+    });
+}
+
+onMounted(()=> {
+    getItemList();
+});
+
 </script>
 <style scoped>
 .my-layout-content {

@@ -6,7 +6,7 @@
         <a-col :span="12">
             <!--标题限制长度-->
             <div class="title">{{props.title.substr(0,30)}}</div>
-            <div class="price">{{props.price}}</div>
+            <div class="price">¥ {{props.price}}</div>
         </a-col>   
     </a-row>
 </template>
@@ -16,7 +16,7 @@ const props = defineProps({
   title: String,
   price: String
 })
-
+console.log(props)
 </script>
 <style scoped>
 .item {
