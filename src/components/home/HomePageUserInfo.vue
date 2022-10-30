@@ -20,9 +20,10 @@
             <a-row>
                 <div class="ad-box">
                 <a-carousel autoplay>
-                    <ImageMock width="300px" height="188px" bgcolor="green" >今日特价1</ImageMock>
-                    <ImageMock width="300px" height="188px" bgcolor="red" >今日特价2</ImageMock>
-                    <ImageMock width="300px" height="188px" bgcolor="blue" >今日特价3</ImageMock>
+                    <ImageMock v-for="(elem,index) in data" :key="index" 
+                    :width="elem.width" :height="elem.height" :bgcolor="elem.bgColor" >
+                        {{elem.text}}
+                    </ImageMock>
                 </a-carousel>
                 </div>
             </a-row>
@@ -31,6 +32,23 @@
 </template>
 <script setup>
 import  ImageMock  from '../ImageMock.vue';
+import {invokeAdList} from '../../api/ad';
+import { onMounted,reactive,ref} from 'vue';
+let data = ref([]);
+
+const getSuperDealAdList = function() {
+    invokeAdList({type:'superDealAd'}, (result)=> {
+        if(result && result.data.length > 0) {
+            data.value = result.data;
+        }
+    }, (e)=> {
+        console.log(e);
+    });
+}
+
+onMounted(()=> {
+    getSuperDealAdList();
+});
 
 </script>
 <style scoped>
