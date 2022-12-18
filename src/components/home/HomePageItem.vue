@@ -1,7 +1,8 @@
 <template>
     <a-row class="item">
         <a-col :span="12">
-            <ImageMock width="160px" height="160px" bgcolor="#fff" >商品图片</ImageMock>
+            <img  :src="props.image"  style="width:160px;height:160px"/>
+
         </a-col>
         <a-col :span="12">
             <!--标题限制长度-->
@@ -14,9 +15,10 @@
 import  ImageMock  from '../ImageMock.vue';
 const props = defineProps({
   title: String,
-  price: String
+  price: String,
+  image: String
 })
-console.log(props)
+console
 </script>
 <style scoped>
 .item {

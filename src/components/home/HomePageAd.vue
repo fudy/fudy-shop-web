@@ -2,17 +2,15 @@
 <div class="box">
   <a-carousel autoplay>
 
-    <ImageMock v-for="(elem,index) in data" :key="index" width="100%" height="400px" :bgcolor="elem.bgColor" >
-      {{elem.text}}
-    </ImageMock>
-
+    <img v-for="(elem,index) in data" :key="index"  :src="elem.url" :alt="elem.text" />
+ 
   </a-carousel>
 </div>
 </template>
 <script setup>
-import  ImageMock  from '../ImageMock.vue';
 import {invokeAdList} from '../../api/ad';
 import { onMounted,reactive,ref} from 'vue';
+
 
 let data = ref([]);
 
@@ -35,6 +33,8 @@ onMounted(()=> {
 <style scoped>
 .box {
     width: 600px;
+    height: 400px;
+    overflow: hidden;
 }
 
 </style>

@@ -7,7 +7,7 @@
             </a-row>
             <!--欢迎语 -->
             <a-row type="flex" justify="center">
-                <h2>Hi！ 你好</h2>
+                <h3>Hi！ 你好</h3>
             </a-row>
             <!--登录、注册按钮 -->
             <a-row type="flex" justify="center">
@@ -19,12 +19,10 @@
             <!--今日特价广告位-->
             <a-row>
                 <div class="ad-box">
-                <a-carousel autoplay>
-                    <ImageMock v-for="(elem,index) in data" :key="index" 
-                    :width="elem.width" :height="elem.height" :bgcolor="elem.bgColor" >
-                        {{elem.text}}
-                    </ImageMock>
-                </a-carousel>
+                    <a-carousel autoplay> 
+                        <img v-for="(elem,index) in data" :key="index"  :src="elem.url" :alt="elem.text" 
+                        style="display:block;height:100%;width:100%"/>
+                    </a-carousel> 
                 </div>
             </a-row>
         </a-space>
@@ -62,6 +60,7 @@ onMounted(()=> {
 }
 .ad-box {
     width: 300px;
+    height:200px;
 }
 
 </style>
