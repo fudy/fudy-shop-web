@@ -6,7 +6,8 @@ const routes = [
   { path: "/registry",  name:"registry", component: () => import("../pages/registry.vue")},
   { path: "/forget_password",  name:"forget_password", component: () => import("../pages/forget_password.vue")},
   { path: "/registry-success", name:"registry-success", component: () => import("../pages/registry-success.vue")},
-  { path: "/modify-password-success", name:"modify-password-success", component: () => import("../pages/modify-password-success.vue")}
+  { path: "/modify-password-success", name:"modify-password-success", component: () => import("../pages/modify-password-success.vue")},
+  { path: "/item",  name:"item", component: () => import("../pages/item.vue")}
 
 ]
 
