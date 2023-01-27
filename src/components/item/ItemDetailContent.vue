@@ -17,8 +17,52 @@
                        </template>
                    </a-list>
                 </a-col>
-                <a-col flex="auto" style="background-color:grey">
-                    <ImageMock width="600px" height="500px" bgcolor="#0f0" >商品基本信息</ImageMock>
+                <a-col flex="500px">
+                    <div class="item-box">
+                        <h2>{{title}}</h2>
+                        <div class="item-box-line" style="background-color:#fff2e8">
+                            <a-row type="flex">
+                                <a-col flex="100px"><span class="item-box-label">价格</span></a-col>
+                                <a-col flex="350px"><h1 style="color:red">¥ 1000</h1></a-col>
+                                <a-col flex="50px"><span class="item-box-label">月销量</span></a-col>
+                                <a-col flex="auto"><span class="item-box-label"><h4>100+</h4></span></a-col>
+                            </a-row>
+                        </div>
+                        <div class="item-box-line" v-for="attr in attributes" :key="attr.name">
+                            <a-row type="flex">
+                                <a-col flex="100px"><span class="item-box-label">{{attr.name}}</span></a-col>
+                                <a-col>
+                                    <a-radio-group v-model:value="attr.selectedValue" button-style="solid" @change="(e)=>optionChange(e,attr)">
+                                        <a-radio-button :value="option.key" v-for="option in attr.options" :key="option.key" 
+                                        :disabled="option.disabled">
+                                            {{option.value}}
+                                        </a-radio-button>
+                                    </a-radio-group>
+                                </a-col>
+                            </a-row>
+                        </div>
+                        
+
+                        <div class="item-box-line">
+                            <a-row type="flex">
+                                <a-col flex="100px"><span class="item-box-label">数量</span></a-col>
+                                <a-col><a-input-number v-model:value="amount" :min="1" :max="10000" /></a-col>
+                            </a-row>
+                        </div>
+                        <div style="margin-top:40px;">
+                            <a-space >
+                                <a-button size="large" danger>
+                                    立即购买
+                                </a-button>
+                                <a-button type="primary" size="large" danger style="background-color:red">
+                                    <template #icon>
+                                    <ShoppingCartOutlined />
+                                    </template>
+                                    加入购物车
+                                </a-button>
+                            </a-space>
+                        </div>
+                    </div>   
                 </a-col>
             </a-row>
         </div>
@@ -30,16 +74,64 @@
 </template>
 <script setup>
     import  ImageMock  from '../ImageMock.vue';
+    import { ShoppingCartOutlined } from '@ant-design/icons-vue';
     import {reactive, ref } from 'vue';
-    const mainImageSrc = ref("http://localhost/image/1426060892226983729wlypw.jpg")
     const activeStyle = reactive("border:2px solid red")
-   
-    const itemImages = ref([
-        {src:"http://localhost/image/1426060892226983729wlypw.jpg", active:true},
-        {src:"http://localhost/image/1426060892-634094994fj.jpg"},
-        {src:"http://localhost/image/14260608922031010795mzl.jpg"},
-        {src:"http://localhost/image/1426060892-728320208gj.jpg"}
-    ])
+    const amount = ref("1");
+    const type = ref("");
+    const item = {
+        "title": "五粮液，茅台春节白酒送礼佳品",
+        "salesVolume": "100+",
+        "mainImage": "http://localhost/image/1426060892226983729wlypw.jpg",
+        "imageList": ["http://localhost/image/1426060892226983729wlypw.jpg",
+            "http://localhost/image/1426060892-760432403wly.jpg",
+            "http://localhost/image/1426060892-992085769mt.jpg"
+        ],
+        "attributeList": [{
+            "name": "品牌",
+            "options": [{ "key":1001, "value":"五粮液"},{ "key":1002, "value":"茅台"}]
+        }, {
+            "name": "款式",
+            "options": [{ "key":2001, "value":"普五"},{"key":2002,"value":"1618"},{"key":2020,"value":"虎茅"}]
+        },{
+            "name": "酒精度",
+            "options":[{"key":3001, "value":"52度"},{"key":3002, "value":"53度"}]
+        }],
+        "skuList" : [
+            {
+                "optionValues" : ["1001","2001","3001"],
+                "price":"820"
+            },{
+                "optionValues" : ["1001","2002","3001"],
+                "price":"850"
+            },{
+                "optionValues" : ["1002","2020","3002"],
+                "price":"3100"
+            }
+        ]
+    }
+
+    const itemImages = ref([]); //商品图片列表
+    const mainImageSrc = ref(""); //商品主图
+    const title = ref(""); //商品标题
+    const attributes = ref([]); //商品规格属性
+    if (item.attributeList && item.attributeList) {
+        item.attributeList.forEach(attr => {
+            attributes.value.push({
+                name: attr.name,
+                options : attr.options,
+                selectedValue: null
+            });
+        })
+    }
+    title.value = item.title;
+    if(item.imageList && item.imageList.length>0) {
+        item.imageList.forEach(img => {
+            itemImages.value.push({src:img, active:false});
+        })
+        itemImages.value[0].active = true; //默认第一个图为选中状态
+        mainImageSrc.value = itemImages.value[0].src; //默认列表中第一个为主图
+    }
 
     const mouseEnter = function (e,index) {
         itemImages.value.forEach(element => {
@@ -48,6 +140,71 @@
         itemImages.value[index].active = true;
         mainImageSrc.value = itemImages.value[index].src;
     }
+
+    /** 是否匹配上skuList里面的记录 */
+    const match = function(sku, attrIndex, opionValue) {
+        for(let i=0; i<sku.optionValues.length; i++) {
+            let selectedValue = attributes.value[i].selectedValue; //第i个属性选中的值
+            if(!selectedValue) { //该属性还没选
+                if(i!=attrIndex) { //不是需要判断的未选的属性 
+                    continue; 
+                }
+                if(sku.optionValues[i] == opionValue) { //选项值相等
+                    continue;
+                }
+                return false;
+            } else if (sku.optionValues[i] != selectedValue ) { //该属性选了，不相等，则不匹配
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /** 判断一个选项是否需要置灰，返回true则置灰 */
+    const shouldOptionDisabled = function(attrIndex, optionValue){
+        for(let i=0; i<item.skuList.length; i++) {
+            if(match(item.skuList[i],attrIndex,optionValue)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** 修改商品属性对应的选项的可用状态（是否置灰） */
+    const changeOptionDisabledStatus = function() {
+        for(let i=0; i<attributes.value.length; i++) {
+            if(attributes.value[i].selectedValue) { //已经选择的属性对应的选项不用处理
+                    continue;
+            }
+            let options = attributes.value[i].options;
+            for(let j=0; j<options.length; j++) {
+                if (shouldOptionDisabled(i, options[j].key)) {
+                    options[j].disabled = true;
+                } else {
+                    options[j].disabled = false;
+                }
+            }
+        }
+    }
+    /** 按顺序清除序号在当前属性的其他已选择属性的值 */
+    const clearSelectedAttr = function(attribute) {
+        let clearSelected = false;
+        attributes.value.forEach(attr => {
+            if (clearSelected) {
+                attr.selectedValue = null;
+            }
+            if (attr.name == attribute.name ) {
+                clearSelected = true;
+            }
+        })
+    }
+
+    /** 用户选择属性的选项后触发的事件 */
+    const optionChange = function (e, attribute) {
+        clearSelectedAttr(attribute);
+        changeOptionDisabledStatus();
+    }
+
 </script>
 <style scoped>
 .home {
@@ -64,12 +221,25 @@
 }
 .item-basic {
     margin: 30px;
-    min-width: 1000px;
+    min-width: 1100px;
 }
 .item-detail {
     margin: 30px
 }
 .active {
     border:2px solid red
+}
+.item-box {
+    text-align: left;
+    margin-left:20px;
+    padding: 5px;
+    width:600px;
+    height:500px
+}
+.item-box-line {
+    padding:10px;
+}
+.item-box-label {
+    line-height:35px;
 }
 </style>
