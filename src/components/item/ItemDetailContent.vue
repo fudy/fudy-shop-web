@@ -23,7 +23,7 @@
                         <div class="item-box-line" style="background-color:#fff2e8">
                             <a-row type="flex">
                                 <a-col flex="100px"><span class="item-box-label">价格</span></a-col>
-                                <a-col flex="350px"><h1 style="color:red">¥ 1000</h1></a-col>
+                                <a-col flex="350px"><h1 style="color:red">¥ {{price}}</h1></a-col>
                                 <a-col flex="50px"><span class="item-box-label">月销量</span></a-col>
                                 <a-col flex="auto"><span class="item-box-label"><h4>100+</h4></span></a-col>
                             </a-row>
@@ -87,34 +87,47 @@
             "http://localhost/image/1426060892-760432403wly.jpg",
             "http://localhost/image/1426060892-992085769mt.jpg"
         ],
+        "minPrice": "820",
+        "maxPrice": "3100", 
         "attributeList": [{
             "name": "品牌",
             "options": [{ "key":1001, "value":"五粮液"},{ "key":1002, "value":"茅台"}]
         }, {
             "name": "款式",
-            "options": [{ "key":2001, "value":"普五"},{"key":2002,"value":"1618"},{"key":2020,"value":"虎茅"}]
+            "options": [{ "key":2001, "value":"普五"},{"key":2002,"value":"1618"},{"key":2020,"value":"虎茅"},{"key":2021,"value":"飞天茅台"}]
         },{
             "name": "酒精度",
             "options":[{"key":3001, "value":"52度"},{"key":3002, "value":"53度"}]
         }],
         "skuList" : [
             {
-                "optionValues" : ["1001","2001","3001"],
-                "price":"820"
+                "optionValues" : [1001,2001,3001],
+                "price":"820",
+                "image": "http://localhost/image/1426060892226983729wlypw.jpg"
             },{
-                "optionValues" : ["1001","2002","3001"],
-                "price":"850"
+                "optionValues" : [1001,2002,3001],
+                "price":"850",
+                "image":"http://localhost/image/1426060892-760432403wly.jpg"
             },{
-                "optionValues" : ["1002","2020","3002"],
-                "price":"3100"
+                "optionValues" : [1002,2020,3002],
+                "price":"3100",
+                "image":"http://localhost/image/1426060892-992085769mt.jpg"
             }
         ]
     }
-
+    const price = ref(); //商品价格
     const itemImages = ref([]); //商品图片列表
     const mainImageSrc = ref(""); //商品主图
     const title = ref(""); //商品标题
     const attributes = ref([]); //商品规格属性
+    //init price
+    if (item.maxPrice) {
+        price.value = item.minPrice + " - " + item.maxPrice;
+    } else {
+        price.value = item.minPrice + " 起";
+    }
+    
+    //init attribute list
     if (item.attributeList && item.attributeList) {
         item.attributeList.forEach(attr => {
             attributes.value.push({
@@ -141,29 +154,45 @@
         mainImageSrc.value = itemImages.value[index].src;
     }
 
-    /** 是否匹配上skuList里面的记录 */
-    const match = function(sku, attrIndex, opionValue) {
-        for(let i=0; i<sku.optionValues.length; i++) {
-            let selectedValue = attributes.value[i].selectedValue; //第i个属性选中的值
-            if(!selectedValue) { //该属性还没选
-                if(i!=attrIndex) { //不是需要判断的未选的属性 
-                    continue; 
-                }
-                if(sku.optionValues[i] == opionValue) { //选项值相等
-                    continue;
-                }
-                return false;
-            } else if (sku.optionValues[i] != selectedValue ) { //该属性选了，不相等，则不匹配
-                    return false;
+    /** 获取已经选择的商品属性的列表 */
+    const getSelectedOptions = function() {
+        let result = [];
+        attributes.value.forEach(attr => {
+            if(attr.selectedValue) {
+                result.push(attr.selectedValue);
+            } else {
+                result.push(null);
             }
+        });
+        return result;
+    }
+
+    /** 是否匹配上skuList里面的记录 
+    */
+    const match = function(sku, attrIndex, optionValue) {
+        const selectedOptions = getSelectedOptions();
+        for(let i=0; i<sku.optionValues.length; i++) {
+            const opt = sku.optionValues[i];
+            const selectedOpt = selectedOptions[i];
+            if(selectedOpt && selectedOpt != opt) { //该属性已经选中，且不匹配sku
+                return false;
+            }
+            if(i==attrIndex && optionValue != opt) { //该属性值和sku不匹配
+                return false;
+            }  
         }
         return true;
     }
 
-    /** 判断一个选项是否需要置灰，返回true则置灰 */
+    /** 
+     * 判断一个选项是否需要置灰，返回true则置灰 
+     * attrIndex 这个选项属于第几个属性
+     * optionValue 这个选项的值
+     * */
     const shouldOptionDisabled = function(attrIndex, optionValue){
         for(let i=0; i<item.skuList.length; i++) {
             if(match(item.skuList[i],attrIndex,optionValue)) {
+                //任意一个匹配，则不置灰
                 return false;
             }
         }
@@ -171,9 +200,9 @@
     }
 
     /** 修改商品属性对应的选项的可用状态（是否置灰） */
-    const changeOptionDisabledStatus = function() {
+    const changeOptionDisabledStatus = function(attribute) {
         for(let i=0; i<attributes.value.length; i++) {
-            if(attributes.value[i].selectedValue) { //已经选择的属性对应的选项不用处理
+            if(attribute && attributes.value[i].name == attribute.name) { //当前选择的选项对应的属性所对应的所有选项都不用处理
                     continue;
             }
             let options = attributes.value[i].options;
@@ -186,6 +215,7 @@
             }
         }
     }
+
     /** 按顺序清除序号在当前属性的其他已选择属性的值 */
     const clearSelectedAttr = function(attribute) {
         let clearSelected = false;
@@ -199,12 +229,44 @@
         })
     }
 
-    /** 用户选择属性的选项后触发的事件 */
-    const optionChange = function (e, attribute) {
-        clearSelectedAttr(attribute);
-        changeOptionDisabledStatus();
+    /**
+     * 比较2个数组里的元素是否相同,arr1和arr2不能为空
+     */
+    const matchArray = function (arr1, arr2) {
+        if (!arr1 || !arr2) {
+            return false;
+        }
+        return arr1.toString() == arr2.toString();
     }
 
+    /** 找到选中的SKU */
+    const findSelectedSKU = function () {
+        let selectedOptions = getSelectedOptions();
+        for(let i=0; i<item.skuList.length; i++) {
+            if(matchArray(item.skuList[i].optionValues,selectedOptions)) {
+                return item.skuList[i];
+            }
+        }
+        return null;
+    }
+
+    /** 用户选择属性的选项后触发的事件 */
+    const optionChange = function (e, attribute) {
+        changeOptionDisabledStatus(attribute);
+        const sku = findSelectedSKU();
+        if (sku) {
+            //价格的联动
+            price.value = sku.price;
+            //图片的联动
+            mainImageSrc.value = sku.image;
+            //清除选中的图片的红框
+            itemImages.value.forEach(element => {
+                element.active = false;
+            });
+        }
+    }
+
+    changeOptionDisabledStatus();
 </script>
 <style scoped>
 .home {
