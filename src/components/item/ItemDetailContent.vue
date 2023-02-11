@@ -25,7 +25,7 @@
                                 <a-col flex="100px"><span class="item-box-label">价格</span></a-col>
                                 <a-col flex="350px"><h1 style="color:red">¥ {{price}}</h1></a-col>
                                 <a-col flex="50px"><span class="item-box-label">月销量</span></a-col>
-                                <a-col flex="auto"><span class="item-box-label"><h4>100+</h4></span></a-col>
+                                <a-col flex="auto"><span class="item-box-label"><h4>{{salesVolume}}</h4></span></a-col>
                             </a-row>
                         </div>
                         <div class="item-box-line" v-for="attr in attributes" :key="attr.name">
@@ -66,22 +66,32 @@
                 </a-col>
             </a-row>
         </div>
-        <a-divider orientation="center">商品详细信息</a-divider>
         <div class="item-detail">
-            <ImageMock width="100%" height="800px" bgcolor="#00f" >商品详细信息</ImageMock>
+            <a-tabs v-model:activeKey="activeKey" type="card">
+                <a-tab-pane key="1" tab="商品详情">
+                    <div v-html="itemDetailInfo" ></div>
+                </a-tab-pane>
+                <a-tab-pane key="2" tab="商品评价">
+                    <ItemFeedbackList />
+                </a-tab-pane>
+            </a-tabs>
         </div>
     </a-layout-content>
+
 </template>
 <script setup>
     import  ImageMock  from '../ImageMock.vue';
+    import ItemFeedbackList from './ItemFeedbackList.vue';
     import { ShoppingCartOutlined } from '@ant-design/icons-vue';
     import {reactive, ref } from 'vue';
     const activeStyle = reactive("border:2px solid red")
     const amount = ref("1");
     const type = ref("");
+    const activeKey = ref("1");
+    const salesVolume = ref("");
     const item = {
         "title": "五粮液，茅台春节白酒送礼佳品",
-        "salesVolume": "100+",
+        "salesVolume": "200+",
         "mainImage": "http://localhost/image/1426060892226983729wlypw.jpg",
         "imageList": ["http://localhost/image/1426060892226983729wlypw.jpg",
             "http://localhost/image/1426060892-760432403wly.jpg",
@@ -120,6 +130,10 @@
     const mainImageSrc = ref(""); //商品主图
     const title = ref(""); //商品标题
     const attributes = ref([]); //商品规格属性
+    const itemDetailInfo = ref("");
+    itemDetailInfo.value = '<div>贵州茅台，酒度数: 53%Vol.香型: 酱香型，单瓶净含量: 500ml</div>'+
+                         '<img src="http://localhost/image/1426060892-992085769mt.jpg" width="600px"/>'
+    salesVolume.value = item.salesVolume;
     //init price
     if (item.maxPrice) {
         price.value = item.minPrice + " - " + item.maxPrice;
@@ -286,7 +300,9 @@
     min-width: 1100px;
 }
 .item-detail {
-    margin: 30px
+    margin-bottom: 300px;
+    margin-left: 30px;
+    text-align: left;
 }
 .active {
     border:2px solid red
