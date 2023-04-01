@@ -3,7 +3,7 @@ import { API_BASE_URL } from './main';
 axios.defaults.withCredentials = true;
 
 export const invokeGetItemList = function (params, successHandler, errorHandler) {
-    axios.get("http://localhost:8889/api/items", {
+    axios.get("http://localhost:8080/api/items", {
         params: params
     }).then(res=>{
         successHandler(res.data);
