@@ -1,10 +1,10 @@
 <template>
-  <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData">
+  <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData" @change="onChange">
     <template #renderItem="{ item }">
       <a-list-item key="item.title">
         <template #actions>
             <span>
-                <LikeOutlined /> {{item.like}}
+                <LikeOutlined /> {{item.likeNum}}
             </span>
         </template>
         <a-list-item-meta >
@@ -30,30 +30,44 @@
 </template>
 <script setup>
 import { LikeOutlined } from '@ant-design/icons-vue';
-import {ref } from 'vue';
-debugger;
-const listData = [];
-for (let i = 1; i < 5; i++) {
-  listData.push({
-    username: `匿名**${i}`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    createTime: `${i}小时前`,
-    like: 130+i,
-    star: 4,
-    imageList:[
-        "http://localhost/image/1426060892226983729wlypw.jpg",
-        "http://localhost/image/1426060892-760432403wly.jpg",
-        "http://localhost/image/1426060892-992085769mt.jpg"
-    ],
-    content: '包装很细心，外观完好。估计还是真品'+i,
-  });
-}
+import { onMounted,reactive,ref} from 'vue';
+import {invokeGetItemFeedbackList} from '../../api/item';
+
+const listData = ref([]);
 
 const pagination = {
-    onChange: page => {
-    console.log(page);
-    },
-    pageSize: 30,
+    current: 1,
+    total: listData.length,
+    showTotal: total => `总共 ${total} 条`,
+    pageSizeOptions: ['10','20','50'],
+    showSizeChanger:true,
+    pageSize: 10,
+    onChange : (page, size) => {
+      pagination.current = page;
+      pagination.pageSize = size;
+      getItemFeedbackList();
+    }
 };
 
+const onChange = (pag, filters, sorter) => {
+  debugger;
+  pagination.current = pag.current;
+  pagination.pageSize = pag.pageSize;
+  getItemFeedbackList();
+}
+
+const getItemFeedbackList = () => {
+  invokeGetItemFeedbackList({itemId:1, current:pagination.current, pageSize:pagination.pageSize}, (res) => {
+    if(res.success) {
+      listData.value = [...res.data];
+      pagination.total=res.total;
+    }
+  },(err) => {
+    console.log(err);
+  })
+}
+
+onMounted(()=> {
+  getItemFeedbackList();
+})
 </script>
