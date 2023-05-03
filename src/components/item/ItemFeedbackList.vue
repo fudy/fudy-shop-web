@@ -49,12 +49,6 @@ const pagination = {
     }
 };
 
-const onChange = (pag, filters, sorter) => {
-  debugger;
-  pagination.current = pag.current;
-  pagination.pageSize = pag.pageSize;
-  getItemFeedbackList();
-}
 
 const getItemFeedbackList = () => {
   invokeGetItemFeedbackList({itemId:1, current:pagination.current, pageSize:pagination.pageSize}, (res) => {
