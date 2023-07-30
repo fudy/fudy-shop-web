@@ -1,10 +1,10 @@
 <template>
-  <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData" @change="onChange">
+  <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData">
     <template #renderItem="{ item }">
       <a-list-item key="item.title">
         <template #actions>
-            <span>
-                <LikeOutlined /> {{item.likeNum}}
+            <span >
+                <LikeOutlined style="cursor:pointer" @click="like(item)" :class="{like:item.likeStyle}"/> {{item.likeNum}}
             </span>
         </template>
         <a-list-item-meta >
@@ -31,9 +31,11 @@
 <script setup>
 import { LikeOutlined } from '@ant-design/icons-vue';
 import { onMounted,reactive,ref} from 'vue';
-import {invokeGetItemFeedbackList} from '../../api/item';
-
+import {invokeGetItemFeedbackList, invokeLikeItemFeedback} from '../../api/item';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const listData = ref([]);
+const itemId = ref();
 
 const pagination = {
     current: 1,
@@ -50,8 +52,8 @@ const pagination = {
 };
 
 
-const getItemFeedbackList = () => {
-  invokeGetItemFeedbackList({itemId:1, current:pagination.current, pageSize:pagination.pageSize}, (res) => {
+const getItemFeedbackList = (itemId) => {
+  invokeGetItemFeedbackList({itemId, current:pagination.current, pageSize:pagination.pageSize}, (res) => {
     if(res.success) {
       listData.value = [...res.data];
       pagination.total=res.total;
@@ -61,7 +63,27 @@ const getItemFeedbackList = () => {
   })
 }
 
+const like = (item) => {
+  invokeLikeItemFeedback(item.id, itemId.value, (res)=> {
+    if (res.success) {
+      if(res.data>0) {
+        item.likeStyle=true;
+      } else {
+        item.likeStyle=false;
+      }
+      item.likeNum += res.data;
+    }
+  });
+}
+
 onMounted(()=> {
-  getItemFeedbackList();
+  itemId.value = route.query.id;
+  getItemFeedbackList(itemId.value);
 })
 </script>
+
+<style scoped>
+.like {
+  color: red;
+}
+</style>

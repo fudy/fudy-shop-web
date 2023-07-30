@@ -29,3 +29,11 @@ export const invokeGetItemFeedbackList = function (params, successHandler, error
         errorHandler(err.message);
     })
 }
+
+export const invokeLikeItemFeedback = function (feedbackId, itemId, successHandler) {
+    axios.post("http://localhost:8889/api/item-feedbacks/"+feedbackId+"?itemId="+itemId, {}).then(res=>{
+        successHandler(res.data);
+    },err=>{
+        errorHandler(err.message);
+    })
+}

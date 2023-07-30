@@ -85,6 +85,8 @@
     import { ShoppingCartOutlined } from '@ant-design/icons-vue';
     import { onMounted,reactive,ref} from 'vue';
     import {invokeGetItem} from '../../api/item';
+    import { useRoute } from 'vue-router';
+    const route = useRoute();
     const activeStyle = reactive("border:2px solid red")
     const amount = ref("1");
     const type = ref("");
@@ -303,7 +305,7 @@
 
     onMounted(()=> {
         changeOptionDisabledStatus(); 
-        getItem('1');
+        getItem(route.query.id);
     });
 
 </script>
