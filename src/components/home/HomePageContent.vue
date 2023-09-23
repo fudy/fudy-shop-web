@@ -1,35 +1,38 @@
 <template>
     <a-layout-content class="my-layout-content">
-        <div style="margin-top:30px;width:1100px">
-            <a-row  :gutter="100" type="flex" justify="start" align="middle">
-                <a-col :offset="4">
-                    <ImageMock width="200px" height="80px" bgcolor="#eee" >网站LOGO</ImageMock>
-                </a-col>
-                <a-col flex="auto">
-                    <a-row>
-                        <a-input-search v-model:value="value" placeholder="飞天茅台"
-                                enter-button="搜索"
-                                size="large"
-                                @search="onSearch"
-                        />
-                        <s-space class="search-text">
-                            <span>酒水饮料 </span> 
-                            <span>女装</span>
-                            <span>男装</span>      
-                            <span>美装 </span> 
-                            <span>女鞋 </span> 
-                            <span>男鞋 </span> 
-                            <span>手机 </span> 
-                            <span>家电</span> 
-                            <span>文具</span>
-                        </s-space>
-                    </a-row>
-                </a-col>
-            </a-row>
+        <div class="content">
+            <div class="logo-container">
+                <a-row  :gutter="100" type="flex" justify="start" align="middle">
+                    <a-col >
+                        
+                        <img src="../../assets/logo.jpg" alt="fudy-shop" />
+                    </a-col>
+                    <a-col flex="auto">
+                        <a-row>
+                            <a-input-search v-model:value="value" placeholder="飞天茅台"
+                                    enter-button="搜索"
+                                    size="large"
+                                    @search="onSearch"
+                            />
+                            <s-space class="search-text">
+                                <span>酒水饮料 </span> 
+                                <span>女装</span>
+                                <span>男装</span>      
+                                <span>美装 </span> 
+                                <span>女鞋 </span> 
+                                <span>男鞋 </span> 
+                                <span>手机 </span> 
+                                <span>家电</span> 
+                                <span>文具</span>
+                            </s-space>
+                        </a-row>
+                    </a-col>
+                </a-row>
+            </div>
         </div>
-        <div style="background-color:#eaeaea;margin-top:5px;padding:20px 40px;">
-            <div style="background-color:white;border-radius:20px;padding:20px">
-                <div >
+        <div class="content">
+            <div class="container">
+                <div>
                     <a-row type="flex" :gutter="30" justify="space-between">
                         <a-col>
                             <HomePageCategory />
@@ -42,28 +45,27 @@
                         </a-col>
                     </a-row>
                 </div>
-                <div>
-                    <h1>猜你喜欢</h1>
-                      <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList">
+                <div style="margin-top:10px;"><h1>猜你喜欢</h1></div>
+                <div >
+                    <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList">
                         <template #renderItem="{ item }" v-if="itemList.length>0">
                             <a-list-item>
                                 <HomePageItem :price="item.price" :title="item.name" :image="item.image" />
                             </a-list-item>
                         </template>
                     </a-list>
-                    
                 </div>
             </div>
         </div>
 </a-layout-content>
 </template>
 <script setup>
-import  ImageMock  from '../ImageMock.vue';
-import HomePageUserInfo from '../home/HomePageUserInfo.vue';
-import HomePageAd from '../home/HomePageAd.vue';
-import HomePageCategory from '../home/HomePageCategory.vue';
-import HomePageItem from '../home/HomePageItem.vue';
-import {invokeGetItemList} from '../../api/item';
+import  ImageMock  from '@/components/ImageMock.vue';
+import HomePageUserInfo from '@/components/home/HomePageUserInfo.vue';
+import HomePageAd from '@/components/home/HomePageAd.vue';
+import HomePageCategory from '@/components/home/HomePageCategory.vue';
+import HomePageItem from '@/components/home/HomePageItem.vue';
+import {invokeGetItemList} from '@/api/item';
 
 import { onMounted,reactive,ref} from 'vue';
 const itemList = ref([]);
@@ -90,7 +92,7 @@ onMounted(()=> {
 </script>
 <style scoped>
 .my-layout-content {
-  background-color: #ffffff;
+  background-color:#eaeaea;
 }
 .search-text {
     color: grey;
@@ -103,4 +105,27 @@ onMounted(()=> {
 .item-row {
     margin: 15px 5px;
 }
+
+.content {
+    display: flex; 
+    justify-content: center;  
+    min-width:1600px;
+    padding:10px 0px;
+   
+}
+
+.logo-container {
+    width: 1400px;
+    display: flex; 
+    justify-content: left;  
+    padding: 20px;
+}
+
+.container {
+    width: 1400px; 
+    background-color:white;
+    border-radius:10px;
+    padding: 20px;
+}
+
 </style>

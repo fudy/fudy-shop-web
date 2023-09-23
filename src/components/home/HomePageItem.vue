@@ -25,7 +25,7 @@ console
     border-radius: 15px;
     padding: 10px;
     width: 400px;
-    background-color: #efefef;
+    background-color: rgb(247,249,249);
     text-align: left;
     
 }

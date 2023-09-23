@@ -39,7 +39,7 @@ onMounted(()=> {
 <style scoped>
 .box {
     border-radius: 15px;
-    background-color: #efefef;
+    background-color: rgb(247,249,249);
     padding: 10px;
 
 }

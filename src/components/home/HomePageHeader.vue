@@ -60,7 +60,7 @@
 }
 .header-user {
   position: absolute;
-  left: 20%;
+  left: 30%;
 }
 .header-user a{
   color: grey;
