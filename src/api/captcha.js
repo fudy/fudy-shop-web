@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { API_BASE_URL } from './main';
+import { FUDY_SHOP_API_BASE_URL } from './main';
 
 export const sendRegisterUserCaptcha = function (params, successHandler, errorHandler) {
     const request = Object.assign({}, params, {type:'captcha-user-registry'}); 
-    axios.post(API_BASE_URL+"captcha", request).then(res=>{
+    axios.post(FUDY_SHOP_API_BASE_URL+"captcha", request).then(res=>{
         successHandler(res.data);
     },err=>{
         errorHandler(err);
@@ -12,7 +12,7 @@ export const sendRegisterUserCaptcha = function (params, successHandler, errorHa
 
 export const sendLoginCaptcha = function (params, successHandler, errorHandler) {
     const request = Object.assign({}, params, {type:'captcha-user-login'});
-    axios.post(API_BASE_URL+"captcha", request).then(res=>{
+    axios.post(FUDY_SHOP_API_BASE_URL+"captcha", request).then(res=>{
         successHandler(res.data);
     },err=>{
         errorHandler(err);
@@ -21,11 +21,11 @@ export const sendLoginCaptcha = function (params, successHandler, errorHandler) 
 
 export const sendForgetPasswordCaptcha = function (params, successHandler, errorHandler) {
     const request = Object.assign({}, params, {type:'captcha-forget-password'});
-    axios.post(API_BASE_URL+"captcha", request).then(res=>{
+    axios.post(FUDY_SHOP_API_BASE_URL+"captcha", request).then(res=>{
         successHandler(res.data);
     },err=>{
         errorHandler(err);
     })
 }
 
-export const IMAGE_CAPTCHA_SRC = API_BASE_URL + "image-captcha"
+export const IMAGE_CAPTCHA_SRC = FUDY_SHOP_API_BASE_URL + "image-captcha"
