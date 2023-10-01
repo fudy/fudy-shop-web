@@ -20,7 +20,8 @@
             <a-row>
                 <div class="ad-box">
                     <a-carousel autoplay> 
-                        <img v-for="(elem,index) in data" :key="index"  :src="elem.url" :alt="elem.text" 
+
+                        <img v-for="(elem,index) in data" :key="index"  :src="elem.url" :alt="elem.text" @click="gotoItemDetai(elem.id)"
                         style="display:block;height:100%;width:100%"/>
                     </a-carousel> 
                 </div>
@@ -33,7 +34,9 @@ import  ImageMock  from '../ImageMock.vue';
 import {invokeAdList} from '../../api/ad';
 import { onMounted,reactive,ref} from 'vue';
 let data = ref([]);
-
+const gotoItemDetai = function(id) {
+    window.open('item?id='+id);
+}
 const getSuperDealAdList = function() {
     invokeAdList({type:'superDealAd'}, (result)=> {
         if(result && result.data.length > 0) {
@@ -62,5 +65,7 @@ onMounted(()=> {
     width: 300px;
     height:200px;
 }
-
+img {
+    cursor: pointer;
+}
 </style>

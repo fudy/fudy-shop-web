@@ -1,8 +1,9 @@
 <template>
 <div class="box">
   <a-carousel autoplay>
-
-    <img v-for="(elem,index) in data" :key="index"  :src="elem.url" :alt="elem.text" />
+     <template v-for="(elem,index) in data" :key="index" >
+        <img  :src="elem.url" :alt="elem.text" @click="gotoItemDetai(elem.id)"/>
+     </template>
  
   </a-carousel>
 </div>
@@ -13,6 +14,10 @@ import { onMounted,reactive,ref} from 'vue';
 
 
 let data = ref([]);
+
+const gotoItemDetai = function(id) {
+    window.open('item?id='+id);
+}
 
 const getHomePageAdList = function() {
     invokeAdList({type:'homePageAd'}, (result)=> {
@@ -35,6 +40,9 @@ onMounted(()=> {
     width: 600px;
     height: 400px;
     overflow: hidden;
+}
+img {
+    cursor: pointer;
 }
 
 </style>
