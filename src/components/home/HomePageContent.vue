@@ -50,7 +50,7 @@
                     <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList">
                         <template #renderItem="{ item }" v-if="itemList.length>0">
                             <a-list-item>
-                                <HomePageItem :price="item.price" :title="item.name" :image="item.image" />
+                                <HomePageItem :id="item.itemId" :price="item.price" :title="item.name" :image="item.image" />
                             </a-list-item>
                         </template>
                     </a-list>

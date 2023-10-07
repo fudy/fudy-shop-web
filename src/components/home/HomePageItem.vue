@@ -1,5 +1,5 @@
 <template>
-    <a-row class="item">
+    <a-row class="item" @click="handleClick">
         <a-col :span="12">
             <img  :src="props.image"  style="width:160px;height:160px"/>
 
@@ -12,13 +12,17 @@
     </a-row>
 </template>
 <script setup>
-import  ImageMock  from '../ImageMock.vue';
 const props = defineProps({
+  id: Number,
   title: String,
   price: String,
   image: String
 })
-console
+
+const handleClick = () => {
+    window.open('item?id='+props.id);
+}
+
 </script>
 <style scoped>
 .item {
@@ -27,8 +31,13 @@ console
     width: 400px;
     background-color: rgb(247,249,249);
     text-align: left;
-    
+    cursor: pointer;
 }
+
+.item:hover {  
+  border: red 1px solid ; /* 当鼠标移动到div标签后，边框颜色变为红色 */ 
+}
+
 .item .title {
     font-family: tahoma, arial, "Hiragino Sans GB", 宋体, sans-serif;
     font-size: 16px;
