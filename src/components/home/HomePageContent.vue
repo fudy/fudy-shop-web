@@ -14,7 +14,7 @@
                                     size="large"
                                     @search="onSearch"
                             />
-                            <s-space class="search-text">
+                            <a-space class="search-text">
                                 <span>酒水饮料 </span> 
                                 <span>女装</span>
                                 <span>男装</span>      
@@ -24,7 +24,7 @@
                                 <span>手机 </span> 
                                 <span>家电</span> 
                                 <span>文具</span>
-                            </s-space>
+                            </a-space>
                         </a-row>
                     </a-col>
                 </a-row>
@@ -70,23 +70,39 @@ import {invokeGetItemList} from '@/api/item';
 import { onMounted,reactive,ref} from 'vue';
 const itemList = ref([]);
 let value = ref("");
-function onSearch() {
+////下次在搜索引擎中，从pageIndex开始取后面的上面，前面的都已经加载到页面了
+let pageIndex = 0;
+//每次加载商品，返回的商品数量
+const pageSize = 2;
+
+const onSearch = function() {
     //TODO
 }
+
 const getItemList = function() {
-    invokeGetItemList({pageIndex:0, pageSize: 12}, (result)=> {
+    invokeGetItemList({pageIndex, pageSize}, (result)=> {
         if(result && result.data.length > 0) {
             for(let item of result.data) {
                 itemList.value.push(item);
             }
+            pageIndex = itemList.value.length; 
         }
     }, (e)=> {
         console.log(e);
     });
 }
 
+const loadMoreItems = function() {
+    console.log('loadMoreItems');
+    getItemList();
+}
+
 onMounted(()=> {
     getItemList();
+});
+//让外部组件可以调用
+defineExpose({
+    loadMoreItems
 });
 
 </script>
