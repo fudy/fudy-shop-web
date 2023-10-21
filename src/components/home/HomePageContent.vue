@@ -73,7 +73,7 @@ let value = ref("");
 ////下次在搜索引擎中，从pageIndex开始取后面的上面，前面的都已经加载到页面了
 let pageIndex = 0;
 //每次加载商品，返回的商品数量
-const pageSize = 2;
+const pageSize = 4;
 
 const onSearch = function() {
     //TODO
@@ -94,7 +94,9 @@ const getItemList = function() {
 
 const loadMoreItems = function() {
     console.log('loadMoreItems');
-    getItemList();
+    if (pageIndex) {
+        getItemList();
+    } 
 }
 
 onMounted(()=> {
@@ -107,9 +109,10 @@ defineExpose({
 
 </script>
 <style scoped>
+/*
 .my-layout-content {
   background-color:#eaeaea;
-}
+}*/
 .search-text {
     color: grey;
     font-size: 8pt;
@@ -123,9 +126,9 @@ defineExpose({
 }
 
 .content {
-    display: flex; 
+/*    display: flex; 
     justify-content: center;  
-    min-width:1600px;
+    min-width:1600px; */
     padding:10px 0px;
    
 }

@@ -1,11 +1,14 @@
 <template>
   <a-layout>
     <HomePageHeader />
-    <HomePageContent ref="content"/>
+    <CenterLayout>
+      <HomePageContent ref="content"/>
+    </CenterLayout>
     <HomePageFooter />
   </a-layout>
 </template>
 <script setup>
+  import CenterLayout from '@/components/CenterLayout.vue';
   import HomePageHeader from '@/components/home/HomePageHeader.vue'
   import HomePageContent from '@/components/home/HomePageContent.vue'
   import HomePageFooter from '@/components/home/HomePageFooter.vue'
@@ -23,7 +26,7 @@
     scrollTop.value = document.documentElement.scrollTop || document.body.scrollTop;
     clientHeight.value = document.documentElement.clientHeight || document.body.clientHeight;
     scrollHeight.value = document.documentElement.scrollHeight || document.body.scrollHeight;
-    //console.log(`scroll top : ${scrollTop.value}, clientHeight: ${clientHeight.value}, scrollHeight: ${scrollHeight.value}`);
+    console.log(`scroll top : ${scrollTop.value}, clientHeight: ${clientHeight.value}, scrollHeight: ${scrollHeight.value}`);
     if (scrollTop.value + clientHeight.value == scrollHeight.value) {
       //调用子组件，加载更多商品数据
       content.value.loadMoreItems();
@@ -43,12 +46,12 @@
   onMounted(()=>{
     handleScroll();
     // 监听滚动事件
-    window.addEventListener('scroll', debounce(handleScroll, 500)) 
+    window.addEventListener('wheel', debounce(handleScroll, 500)) 
   })
   //vue页面销毁时调用的方法
   onUnmounted(()=> {
     // 移除监听器
-    window.removeEventListener('scroll', handleScroll) 
+    window.removeEventListener('wheel', handleScroll) 
   })
 
 </script>
