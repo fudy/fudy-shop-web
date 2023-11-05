@@ -80,11 +80,11 @@
 
 </template>
 <script setup>
-    import  ImageMock  from '../ImageMock.vue';
-    import ItemFeedbackList from './ItemFeedbackList.vue';
+    import  ImageMock  from '@/components/user/ImageMock.vue';
+    import ItemFeedbackList from '@/components/item/ItemFeedbackList.vue';
     import { ShoppingCartOutlined } from '@ant-design/icons-vue';
     import { onMounted,reactive,ref} from 'vue';
-    import {invokeGetItem} from '../../api/item';
+    import {invokeGetItem} from '@/api/item';
     import { useRoute } from 'vue-router';
     const route = useRoute();
     const activeStyle = reactive("border:2px solid red")

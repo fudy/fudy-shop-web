@@ -1,6 +1,6 @@
 <script setup>
-import Login from '../components/Login.vue'
-import SmsCaptchaLogin from '../components/SmsCaptchaLogin.vue'
+import Login from '@/components/user/Login.vue'
+import SmsCaptchaLogin from '@/components/user/SmsCaptchaLogin.vue'
 import { defineComponent, reactive, toRaw, ref } from 'vue'
 const activeKey= ref('1');
 </script>

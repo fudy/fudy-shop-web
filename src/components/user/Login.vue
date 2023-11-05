@@ -42,8 +42,11 @@
 import { defineComponent, reactive, toRaw, ref } from 'vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
-import { login } from '../api/user';
-import {IMAGE_CAPTCHA_SRC} from '../api/captcha';
+import { login } from '@/api/user';
+import {IMAGE_CAPTCHA_SRC} from '@/api/captcha';
+import {useUserStore} from '@/stores/user';
+
+const user = useUserStore();
 
 const formState = reactive({
     userName: '',
@@ -73,6 +76,7 @@ const rules = {
 const invokeLogin = () => {
     login(formState, (res)=> {
         if(res.success) {
+            user.userName = res.data.userName;
             //登录成功，跳转到首页
             router.push({name:'index'});
         } else {

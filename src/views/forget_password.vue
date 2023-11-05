@@ -4,12 +4,12 @@
    </div>
 </template>
 <script setup>
-import ForgetPassword from "../components/ForgetPassword.vue"
+import ForgetPassword from "@/components/user/ForgetPassword.vue"
 </script>
 <style scoped>
 .bk {
    height:700px;
-   background-image: url('../assets/register.png');
+   background-image: url('@/assets/register.png');
    background-repeat:repeat;
 }
 .fp {

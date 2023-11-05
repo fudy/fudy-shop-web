@@ -7,10 +7,10 @@
             </a-row>
             <!--欢迎语 -->
             <a-row type="flex" justify="center">
-                <h3>Hi！ 你好</h3>
+                <h3>Hi！{{user.userName}} 你好 </h3>
             </a-row>
             <!--登录、注册按钮 -->
-            <a-row type="flex" justify="center">
+            <a-row type="flex" justify="center" v-if="!user.userName">
                 <a-space>
                     <a-button type="primary" size="large" shape="round" href="/login">登录</a-button>
                     <a-button type="primary" size="large" shape="round" href="/registry">注册</a-button>
@@ -30,9 +30,13 @@
     </div> 
 </template>
 <script setup>
-import  ImageMock  from '../ImageMock.vue';
-import {invokeAdList} from '../../api/ad';
+import  ImageMock  from '@/components/user/ImageMock.vue';
+import {invokeAdList} from '@/api/ad';
 import { onMounted,reactive,ref} from 'vue';
+import {useUserStore} from '@/stores/user';
+
+const user = useUserStore();
+
 let data = ref([]);
 const gotoItemDetai = function(id) {
     window.open('item?id='+id);

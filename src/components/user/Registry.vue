@@ -48,8 +48,8 @@
 <script>
 import { defineComponent, reactive, toRaw, ref } from 'vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
-import { registerUser } from '../api/user'
-import { sendRegisterUserCaptcha } from '../api/captcha'
+import { registerUser } from '@/api/user'
+import { sendRegisterUserCaptcha } from '@/api/captcha'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue';
 

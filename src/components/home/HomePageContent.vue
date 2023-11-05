@@ -60,7 +60,7 @@
 </a-layout-content>
 </template>
 <script setup>
-import  ImageMock  from '@/components/ImageMock.vue';
+import  ImageMock  from '@/components/user/ImageMock.vue';
 import HomePageUserInfo from '@/components/home/HomePageUserInfo.vue';
 import HomePageAd from '@/components/home/HomePageAd.vue';
 import HomePageCategory from '@/components/home/HomePageCategory.vue';

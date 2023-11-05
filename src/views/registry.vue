@@ -1,5 +1,5 @@
 <script setup>
-import Registry from '../components/Registry.vue'
+import Registry from '@/components/user/Registry.vue'
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import Registry from '../components/Registry.vue'
 <style scoped>
 .bk {
    height:700px;
-   background-image: url('../assets/register.png');
+   background-image: url('@/assets/register.png');
    background-repeat:repeat;
 
 }

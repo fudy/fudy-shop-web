@@ -25,11 +25,13 @@
 </template>
 <script setup>
   import { onMounted,reactive,ref} from 'vue';
-  import { getLoginUser, logout} from '../../api/user';
+  import { logout} from '../../api/user';
   import { useRouter } from 'vue-router';
   import { ShoppingCartOutlined,HeartOutlined,CustomerServiceOutlined, ShoppingOutlined} from '@ant-design/icons-vue';
+  import {useUserStore} from '@/stores/user';
+
+  const user = useUserStore();
   const router = useRouter();
-  let user = reactive({});
 
   const clickLogout = function() {
     logout((data)=> {
@@ -38,16 +40,6 @@
     });
      
   }
-
-  onMounted(() => {
-    getLoginUser((res)=> {
-        if(res.success) {
-            Object.assign(user, res.data)
-        }
-    }, (err)=> {
-        console.log(err);
-    });
-  })
 
 </script>
 <style scoped>
