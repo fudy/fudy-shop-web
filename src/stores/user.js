@@ -6,5 +6,6 @@ export const useUserStore = defineStore('user', {
         userName: null,
         avatar: null
     }
-  }
+  },
+  persist:true
 })
