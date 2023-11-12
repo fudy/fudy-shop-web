@@ -77,6 +77,7 @@ const invokeLogin = () => {
     login(formState, (res)=> {
         if(res.success) {
             user.userName = res.data.userName;
+            user.avatar = res.data.avatar;
             //登录成功，跳转到首页
             router.push({name:'index'});
         } else {

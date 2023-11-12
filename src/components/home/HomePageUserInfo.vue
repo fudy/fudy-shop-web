@@ -3,7 +3,7 @@
         <a-space direction="vertical" size="middle">
             <!--用户头像 -->
             <a-row type="flex" justify="center">
-                <ImageMock width="80px" height="80px" bgcolor="orange" style="border-radius:40px" >默认头像</ImageMock>
+                <a-avatar :size="80" :src="user.avatar" />
             </a-row>
             <!--欢迎语 -->
             <a-row type="flex" justify="center">
