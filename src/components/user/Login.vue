@@ -73,6 +73,11 @@ const rules = {
     ]
 }
 
+const imageClick = () => {
+    //每次点击，生成一个新的链接(修改时间戳)，从而触发验证码重新渲染
+    imageSrc.value = IMAGE_CAPTCHA_SRC + "?t="+ new Date().getTime();
+}
+
 const invokeLogin = () => {
     login(formState, (res)=> {
         if(res.success) {
@@ -82,6 +87,7 @@ const invokeLogin = () => {
             router.push({name:'index'});
         } else {
             errMessage.value = res.errMsg;
+            imageClick();
         }
     }, (err)=> {
         errMessage.value = err;
@@ -98,10 +104,7 @@ const onSubmit = () => {
     });
 };
 
-const imageClick = () => {
-    //每次点击，生成一个新的链接(修改时间戳)，从而触发验证码重新渲染
-    imageSrc.value = IMAGE_CAPTCHA_SRC + "?t="+ new Date().getTime();
-}
+
 
 </script>
 

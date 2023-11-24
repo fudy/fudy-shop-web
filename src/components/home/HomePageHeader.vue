@@ -30,11 +30,13 @@
   import { ShoppingCartOutlined,HeartOutlined,CustomerServiceOutlined, ShoppingOutlined} from '@ant-design/icons-vue';
   import {useUserStore} from '@/stores/user';
 
-  const user = useUserStore();
   const router = useRouter();
 
+  const user = useUserStore();
+  
   const clickLogout = function() {
     logout((data)=> {
+      user.clear();
       //成功，跳转到登录页
       router.push({name:'login'});
     });

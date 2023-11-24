@@ -3,7 +3,8 @@
         <a-space direction="vertical" size="middle">
             <!--用户头像 -->
             <a-row type="flex" justify="center">
-                <a-avatar :size="80" :src="user.avatar" />
+                <a-avatar v-if="user.avatar" :size="80" :src="user.avatar" />
+                <a-avatar v-else :size="80"> <template #icon><UserOutlined /></template> </a-avatar>
             </a-row>
             <!--欢迎语 -->
             <a-row type="flex" justify="center">
@@ -30,7 +31,7 @@
     </div> 
 </template>
 <script setup>
-import  ImageMock  from '@/components/user/ImageMock.vue';
+import { UserOutlined} from '@ant-design/icons-vue';
 import {invokeAdList} from '@/api/ad';
 import { onMounted,reactive,ref} from 'vue';
 import {useUserStore} from '@/stores/user';

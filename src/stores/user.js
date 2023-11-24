@@ -7,5 +7,11 @@ export const useUserStore = defineStore('user', {
         avatar: null
     }
   },
+  actions: {
+    clear() {
+      this.userName = null;
+      this.avatar = null;
+    },
+  },
   persist:true
 })
