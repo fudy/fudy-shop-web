@@ -9,7 +9,7 @@
                     </a-col>
                     <a-col flex="auto">
                         <a-row>
-                            <a-input-search v-model:value="value" placeholder="飞天茅台"
+                            <a-input-search v-model:value="searchValue" placeholder="飞天茅台"
                                     enter-button="搜索"
                                     size="large"
                                     @search="onSearch"
@@ -50,7 +50,7 @@
                     <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList">
                         <template #renderItem="{ item }" v-if="itemList.length>0">
                             <a-list-item>
-                                <HomePageItem :id="item.itemId" :price="item.price" :title="item.name" :image="item.image" />
+                                <ItemCard :id="item.itemId" :price="item.price" :title="item.name" :image="item.image" />
                             </a-list-item>
                         </template>
                     </a-list>
@@ -60,24 +60,32 @@
 </a-layout-content>
 </template>
 <script setup>
-import  ImageMock  from '@/components/user/ImageMock.vue';
 import HomePageUserInfo from '@/components/home/HomePageUserInfo.vue';
 import HomePageAd from '@/components/home/HomePageAd.vue';
 import HomePageCategory from '@/components/home/HomePageCategory.vue';
-import HomePageItem from '@/components/home/HomePageItem.vue';
+import ItemCard from '@/components/item/ItemCard.vue';
+
 import {invokeGetItemList} from '@/api/item';
 
 import { onMounted,reactive,ref} from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+let searchValue = ref("");
+
+const onSearch = function() {
+    router.push({
+        path:'/search',
+        query: { q: searchValue.value }
+    })
+}
+
 const itemList = ref([]);
-let value = ref("");
+
 ////下次在搜索引擎中，从pageIndex开始取后面的上面，前面的都已经加载到页面了
 let pageIndex = 0;
 //每次加载商品，返回的商品数量
 const pageSize = 4;
-
-const onSearch = function() {
-    //TODO
-}
 
 const getItemList = function() {
     invokeGetItemList({pageIndex, pageSize}, (result)=> {

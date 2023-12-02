@@ -28,7 +28,7 @@ const handleClick = () => {
 .item {
     border-radius: 15px;
     padding: 10px;
-    width: 400px;
+    width: 435px;
     background-color: rgb(247,249,249);
     text-align: left;
     cursor: pointer;
