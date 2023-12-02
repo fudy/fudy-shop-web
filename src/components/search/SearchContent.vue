@@ -21,7 +21,7 @@
         <!-- 商品列表 -->
         <div class="item-container">
             <div >
-                <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList">
+                <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList" :pagination="pagination">
                     <template #renderItem="{ item }" v-if="itemList.length>0">
                         <a-list-item>
                             <ItemCard :id="item.itemId" :price="item.price" :title="item.name" :image="item.image" />
@@ -29,48 +29,50 @@
                     </template>
                 </a-list>
             </div>
-            <!-- 分页 -->
-            <a-pagination :current="current" :total="total" show-less-items show-quick-jumper />
         </div>
-
     </a-layout-content>
 </template>
 <script setup>
-import { useRoute } from 'vue-router';
-import {invokeGetItemList} from '@/api/item';
-import { onMounted,reactive,ref} from 'vue';
+import { useRoute,useRouter } from 'vue-router';
+import {invokeSearchItems} from '@/api/item';
+import { onMounted,reactive,ref,computed} from 'vue';
 import ItemCard from '@/components/item/ItemCard.vue';
 const route = useRoute();
+const router = useRouter();
 const itemList = ref([]);
-let total = ref(100);
-let current = ref(1);
-let searchValue = ref("");
-searchValue.value = route.query.q;
+let total = computed(() => itemList.length);
+let searchValue = ref(route.query.q);
 
-let pageIndex = 0;
-//每次加载商品，返回的商品数量
-const pageSize = 4;
+//分页配置
+const pagination = {
+  pageSize: 2,
+  showQuickJumper: true
+};
 
-/** 获取商品列表 */
-const getItemList = function() {
-    invokeGetItemList({pageIndex, pageSize}, (result)=> {
-        if(result && result.data.length > 0) {
-            for(let item of result.data) {
-                itemList.value.push(item);
-            }
-            pageIndex = itemList.value.length; 
-        }
-    }, (e)=> {
-        console.log(e);
+/** 修改url参数，并搜索商品 */
+const onSearch = function() {
+    router.push({
+        path:'/search',
+        query: { q: searchValue.value }
     });
+    search();
 }
 
-const onSearch = function() {
-    //TODO
+/** 搜索商品 */
+const search = function() {
+    invokeSearchItems({keyword:searchValue.value}).then(result => {
+        if (result.data.success) {
+            itemList.value = [];
+            for(let item of result.data.data) {
+                itemList.value.push(item);
+            }
+            total.value = itemList.value.length;
+        }
+    })
 }
 
 onMounted(()=> {
-    getItemList();
+    search();
 });
 
 </script>

@@ -37,3 +37,7 @@ export const invokeLikeItemFeedback = function (feedbackId, itemId, successHandl
         errorHandler(err.message);
     })
 }
+
+export const invokeSearchItems = function(params) {
+    return axios.get(API_BASE_URL+"search/items", {params : {keyword : params.keyword}});
+}
