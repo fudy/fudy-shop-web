@@ -3,27 +3,24 @@
         <div class="content">
             <div class="logo-container">
                 <a-row  :gutter="100" type="flex" justify="start" align="middle">
-                    <a-col >
-                        
-                        <img src="../../assets/logo.jpg" alt="fudy-shop" />
+                    <a-col >   
+                        <Logo />
                     </a-col>
                     <a-col flex="auto">
                         <a-row>
                             <a-input-search v-model:value="searchValue" placeholder="飞天茅台"
                                     enter-button="搜索"
+                                    style="width: 600px"
                                     size="large"
                                     @search="onSearch"
                             />
+                        </a-row>
+                        <a-row>
                             <a-space class="search-text">
-                                <span>酒水饮料 </span> 
-                                <span>女装</span>
-                                <span>男装</span>      
-                                <span>美装 </span> 
-                                <span>女鞋 </span> 
-                                <span>男鞋 </span> 
-                                <span>手机 </span> 
-                                <span>家电</span> 
-                                <span>文具</span>
+                                <span v-for="(item, index) in hotSearchKeywords" :key="index" style="cursor:pointer;font-size:12px"
+                                    @click="searchHotKeyword(item.keyword)">
+                                        {{item.keyword}} 
+                                </span> 
                             </a-space>
                         </a-row>
                     </a-col>
@@ -64,13 +61,14 @@ import HomePageUserInfo from '@/components/home/HomePageUserInfo.vue';
 import HomePageAd from '@/components/home/HomePageAd.vue';
 import HomePageCategory from '@/components/home/HomePageCategory.vue';
 import ItemCard from '@/components/item/ItemCard.vue';
-
+import * as SearchApi from '@/api/search.js';
 import {invokeGetItemList} from '@/api/item';
+import Logo from '@/components/home/Logo.vue';
 
 import { onMounted,reactive,ref} from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-
+let hotSearchKeywords = ref([]);
 let searchValue = ref("");
 
 const onSearch = function() {
@@ -107,7 +105,26 @@ const loadMoreItems = function() {
     } 
 }
 
+/** 获取热搜关键词 */
+const getHotSearchKeywords = () => {
+    SearchApi.getHotSearchKeywords().then(result => {
+        if (result.data.success) {
+            hotSearchKeywords.value = [];
+            for (let item of result.data.data) {
+                hotSearchKeywords.value.push(item);
+            }
+        }
+    })
+}
+
+/** 热搜关键词搜索 */
+const searchHotKeyword = (keyword) => {
+    searchValue.value = keyword;
+    onSearch();
+}
+
 onMounted(()=> {
+    getHotSearchKeywords();
     getItemList();
 });
 //让外部组件可以调用

@@ -4,7 +4,7 @@
         <div class="search-container">
             <a-row  :gutter="100" type="flex" justify="start" align="middle">
                 <a-col >
-                    <img src="../../assets/logo.jpg" alt="fudy-shop" />
+                    <Logo />
                 </a-col>
                 <a-col flex="auto">
                     <a-row>
@@ -37,6 +37,7 @@ import { useRoute,useRouter } from 'vue-router';
 import {invokeSearchItems} from '@/api/item';
 import { onMounted,reactive,ref,computed} from 'vue';
 import ItemCard from '@/components/item/ItemCard.vue';
+import Logo from '@/components/home/Logo.vue';
 const route = useRoute();
 const router = useRouter();
 const itemList = ref([]);
@@ -70,6 +71,7 @@ const search = function() {
         }
     })
 }
+
 
 onMounted(()=> {
     search();
