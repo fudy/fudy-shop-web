@@ -34,7 +34,7 @@
 </template>
 <script setup>
 import { useRoute,useRouter } from 'vue-router';
-import {invokeSearchItems} from '@/api/item';
+import {invokeSearchItems, invokeCategorySearchItems} from '@/api/item';
 import { onMounted,reactive,ref,computed} from 'vue';
 import ItemCard from '@/components/item/ItemCard.vue';
 import Logo from '@/components/home/Logo.vue';
@@ -46,7 +46,7 @@ let searchValue = ref(route.query.q);
 
 //分页配置
 const pagination = {
-  pageSize: 2,
+  pageSize: 50,
   showQuickJumper: true
 };
 
@@ -59,22 +59,33 @@ const onSearch = function() {
     search();
 }
 
+const renderItems = function(result) {
+    if (result.data.success) {
+        itemList.value = [];
+        for(let item of result.data.data) {
+            itemList.value.push(item);
+        }
+        total.value = itemList.value.length;
+    }
+}
 /** 搜索商品 */
 const search = function() {
+    //根据关键词查询
     invokeSearchItems({keyword:searchValue.value}).then(result => {
-        if (result.data.success) {
-            itemList.value = [];
-            for(let item of result.data.data) {
-                itemList.value.push(item);
-            }
-            total.value = itemList.value.length;
-        }
-    })
+        renderItems(result);
+    });
 }
 
 
 onMounted(()=> {
-    search();
+    if (route.query.categoryId) {
+        //根据类目id查询
+        invokeCategorySearchItems({categoryId: route.query.categoryId}).then(result => {
+            renderItems(result);
+        });
+    } else {
+        search();
+    }
 });
 
 </script>

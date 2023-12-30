@@ -4,7 +4,7 @@
     <template #renderItem="{ item }">
       <a-list-item>
           <span v-for="(elem, index) in item.itemCategoryList" :key="index" class="item">
-              <a :href="elem.url" style="color:#222">{{elem.name}}</a>
+              <a style="color:#222" @click="searchItems(elem)">{{elem.name}}</a>
           </span>
       </a-list-item>
     </template>
@@ -15,10 +15,27 @@
 </div>
 </template>
 <script setup>
-import {invokeGetItemCategoryList} from '../../api/itemCategory';
+import {invokeGetItemCategoryList} from '@/api/itemCategory';
 import { onMounted,reactive,ref} from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 let data = ref([]);
+
+const searchItems = function(item) {
+    if (item.categoryId) {
+        router.push({
+            path:'/search',
+            query: { categoryId: item.categoryId}
+        })
+    } else {
+        router.push({
+            path:'/search',
+            query: { q: item.name}
+        })
+    }
+
+}
 
 const getItemCategoryList = function() {
     invokeGetItemCategoryList({}, (result)=> {

@@ -41,3 +41,7 @@ export const invokeLikeItemFeedback = function (feedbackId, itemId, successHandl
 export const invokeSearchItems = function(params) {
     return axios.get(API_BASE_URL+"search/items", {params : {keyword : params.keyword}});
 }
+
+export const invokeCategorySearchItems = function(params) {
+    return axios.get(API_BASE_URL+"category-search/items", {params : {categoryId : params.categoryId}});
+}
