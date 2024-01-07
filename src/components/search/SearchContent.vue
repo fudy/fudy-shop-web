@@ -20,38 +20,66 @@
         </div>
         <!-- 商品列表 -->
         <div class="item-container">
-            <div >
-                <a-list :grid="{ gutter: 10, column:3 }" :data-source="itemList" :pagination="pagination">
-                    <template #renderItem="{ item }" v-if="itemList.length>0">
-                        <a-list-item>
-                            <ItemCard :id="item.itemId" :price="item.price" :title="item.name" :image="item.image" />
-                        </a-list-item>
+            <a-tabs v-model:activeKey="sortField" style="text-align:left" @change="onSortTabChange">
+                <a-tab-pane key="default" tab="综合">
+                    <ItemList :itemList="itemList" />
+                </a-tab-pane>
+                <a-tab-pane key="price" >
+                    <template #tab>
+                        <a-dropdown>
+                            <span> 价格 <DownOutlined /> </span>
+                            <template #overlay>
+                                <a-menu @click="handleMenuClick">
+                                    <a-menu-item key="asc">
+                                        <ArrowUpOutlined />
+                                        从低到高
+                                    </a-menu-item>
+                                    <a-menu-item key="desc">
+                                        <ArrowDownOutlined />
+                                        从高到低
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
                     </template>
-                </a-list>
-            </div>
+                    <ItemList :itemList="itemList" />
+                </a-tab-pane>
+
+            </a-tabs>
+
         </div>
     </a-layout-content>
 </template>
 <script setup>
 import { useRoute,useRouter } from 'vue-router';
+import ItemList from '@/components/search/ItemList.vue'
+import { DownOutlined, ArrowUpOutlined, ArrowDownOutlined} from '@ant-design/icons-vue';
 import {invokeSearchItems, invokeCategorySearchItems} from '@/api/item';
-import { onMounted,reactive,ref,computed} from 'vue';
+import { onMounted,reactive,ref,computed,h} from 'vue';
 import ItemCard from '@/components/item/ItemCard.vue';
 import Logo from '@/components/home/Logo.vue';
+const defaultSortField="default";
 const route = useRoute();
 const router = useRouter();
 const itemList = ref([]);
-let total = computed(() => itemList.length);
+const sortField = ref(defaultSortField);
 let searchValue = ref(route.query.q);
+let sortOrder = "asc";
 
-//分页配置
-const pagination = {
-  pageSize: 50,
-  showQuickJumper: true
+const onSortTabChange = () => {
+    init();
+}
+
+const handleMenuClick = e => {
+    sortField.value = 'price';
+    sortOrder = e.key;
+    onSortTabChange();
 };
 
 /** 修改url参数，并搜索商品 */
 const onSearch = function() {
+    sortField.value = defaultSortField;
+    sortOrder = null;
     router.push({
         path:'/search',
         query: { q: searchValue.value }
@@ -65,27 +93,37 @@ const renderItems = function(result) {
         for(let item of result.data.data) {
             itemList.value.push(item);
         }
-        total.value = itemList.value.length;
     }
 }
 /** 搜索商品 */
 const search = function() {
     //根据关键词查询
-    invokeSearchItems({keyword:searchValue.value}).then(result => {
+    invokeSearchItems({
+        keyword:searchValue.value,
+        sortField:sortField.value,
+        sortOrder:sortOrder
+    }).then(result => {
         renderItems(result);
     });
 }
 
-
-onMounted(()=> {
+const init = function() {
     if (route.query.categoryId) {
         //根据类目id查询
-        invokeCategorySearchItems({categoryId: route.query.categoryId}).then(result => {
+        invokeCategorySearchItems({
+            categoryId: route.query.categoryId,
+            sortField:  sortField.value,
+            sortOrder:  sortOrder
+        }).then(result => {
             renderItems(result);
         });
     } else {
         search();
     }
+}
+
+onMounted(()=> {
+    init();
 });
 
 </script>

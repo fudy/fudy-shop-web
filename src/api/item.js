@@ -39,9 +39,17 @@ export const invokeLikeItemFeedback = function (feedbackId, itemId, successHandl
 }
 
 export const invokeSearchItems = function(params) {
-    return axios.get(API_BASE_URL+"search/items", {params : {keyword : params.keyword}});
+    return axios.get(API_BASE_URL+"search/items", {params : {
+        keyword : params.keyword,
+        sortField:  params.sortField,
+        sortOrder:  params.sortOrder
+    }});
 }
 
 export const invokeCategorySearchItems = function(params) {
-    return axios.get(API_BASE_URL+"category-search/items", {params : {categoryId : params.categoryId}});
+    return axios.get(API_BASE_URL+"category-search/items", {params : {
+        categoryId : params.categoryId,
+        sortField:  params.sortField,
+        sortOrder:  params.sortOrder
+    }});
 }
