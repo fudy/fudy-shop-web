@@ -1,17 +1,20 @@
 <template>
-  <a-config-provider :locale="zh_CN">
+  <a-config-provider :locale="locale">
     <router-view></router-view>
   </a-config-provider>
 </template>
  
 <script>
-import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
-import "moment/locale/zh-cn";
+import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+
+dayjs.locale('zh-cn');
 export default {
   name: 'App',
   data() {
     return {
-      zh_CN
+      locale: zhCN
     };
   },
   components: {
