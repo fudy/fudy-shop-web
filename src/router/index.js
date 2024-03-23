@@ -5,10 +5,11 @@ const routes = [
   { path: "/login", name:"login", component: () => import("@/views/login.vue")},
   { path: "/registry",  name:"registry", component: () => import("@/views/registry.vue")},
   { path: "/forget_password",  name:"forget_password", component: () => import("@/views/forget_password.vue")},
-  { path: "/registry-success", name:"registry-success", component: () => import("@/views/registry-success.vue")},
-  { path: "/modify-password-success", name:"modify-password-success", component: () => import("@/views/modify-password-success.vue")},
+  { path: "/registry-success", name:"registry-success", component: () => import("@/views/registry_success.vue")},
+  { path: "/modify-password-success", name:"modify-password-success", component: () => import("@/views/modify_password_success.vue")},
   { path: "/item",  name:"item", component: () => import("@/views/item.vue")},
-  { path: "/search", name:"search", component: () => import("@/views/search.vue")}
+  { path: "/search", name:"search", component: () => import("@/views/search.vue")},
+  { path: "/confirm-order", name:"confirm-order", component: () => import("@/views/confirm_order.vue")}
 
 ]
 
