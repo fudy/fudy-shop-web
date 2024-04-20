@@ -49,3 +49,9 @@ export const getLoginUser = function (successHandler, errorHandler) {
         errorHandler(err.message);
     })
 }
+
+export const getUserAddressList = function () {
+    return axios.get(API_BASE_URL+"users/addresses",{
+        params: {}
+    });
+}

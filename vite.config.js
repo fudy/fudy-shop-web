@@ -11,12 +11,6 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // localhost:3000/api/fudy-shop/user => localhost:8888/api/user
-      '/api/fudy-shop' : {
-        target : 'http://localhost:8888',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/\/fudy-shop/, '')
-      },
       // localhost:3000/api/fudy-shop-item-detail/item => localhost:8889/api/item
       '/api/fudy-shop-item-detail' : {
         target : 'http://localhost:8889',
@@ -29,6 +23,13 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/\/fudy-shop-homepage/, '')
       },
+      // localhost:3000/api/fudy-shop/user => localhost:8888/api/user
+      '/api/fudy-shop' : {
+        target : 'http://localhost:8888',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/\/fudy-shop/, '')
+      },
+
     }
   }
 });
