@@ -28,6 +28,7 @@
                                 <a-col flex="auto"><span class="item-box-label"><h4>{{salesVolume}}</h4></span></a-col>
                             </a-row>
                         </div>
+                        <!-- sku -->
                         <div class="item-box-line" v-for="attr in attributes" :key="attr.name">
                             <a-row type="flex">
                                 <a-col flex="100px"><span class="item-box-label">{{attr.name}}</span></a-col>
@@ -41,8 +42,7 @@
                                 </a-col>
                             </a-row>
                         </div>
-                        
-
+                        <!-- 数量 -->
                         <div class="item-box-line">
                             <a-row type="flex">
                                 <a-col flex="100px"><span class="item-box-label">数量</span></a-col>
@@ -51,7 +51,7 @@
                         </div>
                         <div style="margin-top:40px;">
                             <a-space >
-                                <a-button size="large" danger>
+                                <a-button size="large" danger @click="buy">
                                     立即购买
                                 </a-button>
                                 <a-button type="primary" size="large" danger style="background-color:red">
@@ -80,13 +80,15 @@
 
 </template>
 <script setup>
-    import  ImageMock  from '@/components/user/ImageMock.vue';
     import ItemFeedbackList from '@/components/item/ItemFeedbackList.vue';
     import { ShoppingCartOutlined } from '@ant-design/icons-vue';
-    import { onMounted,reactive,ref} from 'vue';
+    import { onMounted,reactive,ref, toRaw} from 'vue';
     import {invokeGetItem} from '@/api/item';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
+    import {useOrdersStore} from '@/stores/order';
+    const ordersStore = useOrdersStore();
     const route = useRoute();
+    const router = useRouter();
     const activeStyle = reactive("border:2px solid red")
     const amount = ref("1");
     const type = ref("");
@@ -94,52 +96,40 @@
     const salesVolume = ref("");
     
     const item = reactive({});
-    /*
-    const item = {
-        "title": "五粮液，茅台春节白酒送礼佳品",
-        "salesVolume": "200+",
-        "mainImage": "http://localhost/image/1426060892226983729wlypw.jpg",
-        "imageList": ["http://localhost/image/1426060892226983729wlypw.jpg",
-            "http://localhost/image/1426060892-760432403wly.jpg",
-            "http://localhost/image/1426060892-992085769mt.jpg"
-        ],
-        "minPrice": "820",
-        "maxPrice": "3100", 
-        "attributeList": [{
-            "name": "品牌",
-            "options": [{ "key":"品牌-五粮液", "value":"五粮液"},{ "key":"品牌-茅台", "value":"茅台"}]
-        }, {
-            "name": "款式",
-            "options": [{ "key":"款式-普五", "value":"普五"},{"key":"款式-1618","value":"1618"},{"key":"款式-虎茅","value":"虎茅"},{"key":"款式-飞天茅台","value":"飞天茅台"}]
-        },{
-            "name": "酒精度",
-            "options":[{"key":"酒精度-52度", "value":"52度"},{"key":"酒精度-53度", "value":"53度"}]
-        }],
-        "skuList" : [
-            {
-                "optionValues" : ["品牌-五粮液","款式-普五","酒精度-52度"],
-                "price":"820",
-                "image": "http://localhost/image/1426060892226983729wlypw.jpg"
-            },{
-                "optionValues" : ["品牌-五粮液","款式-1618","酒精度-52度"],
-                "price":"850",
-                "image":"http://localhost/image/1426060892-760432403wly.jpg"
-            },{
-                "optionValues" : ["品牌-茅台","款式-虎茅","酒精度-53度"],
-                "price":"3100",
-                "image":"http://localhost/image/1426060892-992085769mt.jpg"
-            }
-        ]
-    }
-    */
+
     const price = ref(); //商品价格
     const itemImages = ref([]); //商品图片列表
     const mainImageSrc = ref(""); //商品主图
     const title = ref(""); //商品标题
     const attributes = ref([]); //商品规格属性
     const itemDetailInfo = ref("");
-//    itemDetailInfo.value = '<div>贵州茅台，酒度数: 53%Vol.香型: 酱香型，单瓶净含量: 500ml</div>'+
-//                         '<img src="http://localhost/image/1426060892-992085769mt.jpg" width="600px"/>'
+
+
+    const generateOrderId = () => {
+        return new Date().getTime(); //先mock，后面从服务器获取
+    }
+
+    const buy = () => {
+        const sku = findSelectedSKU();
+        const price = sku?.price
+        const image = sku?.image
+        const skuKeyValue = sku?.optionValues?.[0]
+        const formState = {
+            itemId: route.query.id,
+            amount: amount.value,
+            sku: skuKeyValue,
+            price: price,
+            image: image,
+            title: title.value
+        }
+        const orderId = generateOrderId();
+        ordersStore.addOrder(orderId, formState);
+        router.push({
+            path:'/confirm-order',
+            query: { orderId: orderId }
+        })
+    }
+
     const init = function(item) {
         itemDetailInfo.value = item.desc;
         salesVolume.value = item.salesVolume;
@@ -267,7 +257,6 @@
     /** 找到选中的SKU */
     const findSelectedSKU = function () {
         let selectedOptions = getSelectedOptions();
-        debugger;
         for(let i=0; i<item.value.skuList.length; i++) {
             if(matchArray(item.value.skuList[i].optionValues,selectedOptions)) {
                 return item.value.skuList[i];
