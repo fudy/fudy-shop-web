@@ -86,6 +86,7 @@
     import {invokeGetItem} from '@/api/item';
     import { useRoute, useRouter } from 'vue-router';
     import {useOrdersStore} from '@/stores/order';
+    import * as OrderApi from '@/api/order';
     const ordersStore = useOrdersStore();
     const route = useRoute();
     const router = useRouter();
@@ -104,16 +105,11 @@
     const attributes = ref([]); //商品规格属性
     const itemDetailInfo = ref("");
 
-
-    const generateOrderId = () => {
-        return new Date().getTime(); //先mock，后面从服务器获取
-    }
-
     const buy = () => {
         const sku = findSelectedSKU();
-        const price = sku?.price
-        const image = sku?.image
-        const skuKeyValue = sku?.optionValues?.[0]
+        const price = sku?.price;
+        const image = sku?.image;
+        const skuKeyValue = sku?.optionValues?.[0];
         const formState = {
             itemId: route.query.id,
             amount: amount.value,
@@ -122,12 +118,15 @@
             image: image,
             title: title.value
         }
-        const orderId = generateOrderId();
-        ordersStore.addOrder(orderId, formState);
-        router.push({
-            path:'/confirm-order',
-            query: { orderId: orderId }
+        OrderApi.generateOrderID().then(result=> {
+            const orderId = result.data?.data;
+            ordersStore.addOrder(orderId, formState);
+            router.push({
+                path:'/confirm-order',
+                query: { orderId: orderId }
+            });
         })
+
     }
 
     const init = function(item) {
@@ -146,7 +145,7 @@
                 attributes.value.push({
                     name: attr.name,
                     options : attr.options,
-                    selectedValue: null
+                    selectedValue: attr.options?.[0].key
                 });
             })
         }
@@ -335,5 +334,8 @@
 }
 .item-box-label {
     line-height:35px;
+}
+.required {
+    border:2px solid red
 }
 </style>

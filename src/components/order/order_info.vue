@@ -18,7 +18,7 @@
 import {useOrdersStore} from '@/stores/order';
 import { onMounted,reactive,ref, toRaw} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
+const emit = defineEmits(['inited']);
 const route = useRoute();
 const ordersStore = useOrdersStore();
 let orderInfo = reactive({});
@@ -27,6 +27,8 @@ const initOrderInfo = (orderId) => {
   if (orderId) {
     const order = ordersStore.getOrderById(orderId);
     Object.assign(orderInfo, order);
+    //向父组件发送事件，传递数据
+    emit('inited', orderInfo);
   }
 }
 

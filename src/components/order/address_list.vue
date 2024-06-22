@@ -21,6 +21,7 @@
 import { onMounted,reactive,ref} from 'vue';
 import { CheckSquareOutlined , BorderOutlined} from '@ant-design/icons-vue';
 import * as UserApi from '@/api/user';
+const emit = defineEmits(['update']);
 
 const data = ref([]);
 
@@ -29,12 +30,14 @@ const setDefaultSelectedAddress = function() {
     for(let addr of data.value) {
       if (addr.defaultAddress) { //默认地址
         addr.selected = true;
+        emit("update", addr);
       }
     }
 }
 
 //选中地址
 const setSelectedAddress = function(address) {
+    emit("update", address);
     for(let addr of data.value) {
       addr.selected = addr == address ? true : false;
     }

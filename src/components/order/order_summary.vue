@@ -1,12 +1,20 @@
 <template>
     <a-card class="container">
         <a-descriptions>
-            <a-descriptions-item label="实付款" :span="3"><span class="price">¥3200</span></a-descriptions-item>
-            <a-descriptions-item label="寄送至" :span="3">上海市徐汇区 xx小区xxx编号 138xxxxxxxx</a-descriptions-item>
-            <a-descriptions-item label="收货人" :span="3">张三 138xxxxxxxx</a-descriptions-item>
+            <a-descriptions-item label="实付款" :span="3"><span class="price">¥{{props.price}}</span></a-descriptions-item>
+            <a-descriptions-item label="寄送至" :span="3">{{props.address}}</a-descriptions-item>
+            <a-descriptions-item label="收货人" :span="3">{{props.receiver}}</a-descriptions-item>
         </a-descriptions>
     </a-card>
 </template>
+<script setup>
+const props = defineProps({
+  price: String,
+  address: String,
+  receiver: String
+})
+
+</script>
 <style scoped>
 .container {
     width: 300px !important;
