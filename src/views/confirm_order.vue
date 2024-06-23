@@ -27,13 +27,17 @@
   import Logo from '@/components/home/Logo.vue';
   import OrderInfo from '@/components/order/order_info.vue';
   import OrderSummary from '@/components/order/order_summary.vue';
+  import * as OrderApi from '@/api/order';
+  import { useRouter,useRoute } from 'vue-router';
+  const router = useRouter();
+  const route = useRoute();
   const price = ref();
   const address = ref();
+  const addressId = ref();
   const receiver = ref();
   const orderInfo = reactive({});
 
   const initOrderInfo = (order) => {
-      debugger;
       Object.assign(orderInfo, order);
       if(order.amount && order.price) {
         const totalPrice = parseInt(order.amount) * parseFloat(order.price);
@@ -44,6 +48,7 @@
   const updateAddress = (addr) => {
       receiver.value = `${addr.receiver} ${addr.phone}`;
       address.value = `${addr.city}${addr.district}${addr.address}`;
+      addressId.value = addr.id;
       if (addr.province != addr.city) { //考虑上海，北京这种省和市一样的情况
           address.value = addr.province + address.value;
       }
@@ -51,6 +56,26 @@
 
   const placeOrder = () => {
       console.log(orderInfo);
+      debugger;
+      const skuKeyValue = orderInfo.sku.split("-");
+      const itemSku = {}
+      itemSku[skuKeyValue[0]] = skuKeyValue[1];
+      const params = {
+        orderId: route.query.orderId,
+        actualAmount: orderInfo.price,
+        totalAmount: orderInfo.price,
+        deliveryAddressId: addressId.value,
+        orderItemDTOList: [{
+            itemId : orderInfo.itemId,
+            quantity: orderInfo.amount,
+            subtotal: orderInfo.price,
+            itemSku
+        }]
+ 
+      }
+      console.log(JSON.stringify(params))
+      OrderApi.placeOrder(params);
+
   }
 
 </script>
