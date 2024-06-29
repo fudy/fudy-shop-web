@@ -7,7 +7,7 @@
                         <Logo />
                     </div>
                     <AddressList @update="(address) => updateAddress(address)" />
-                    <OrderInfo @inited="(order) => initOrderInfo(order)"/>
+                    <OrderInfo ref="orderInfoRef" @inited="(order) => initOrderInfo(order)"/>
                     <div class="summary">
                         <OrderSummary :price="price" :address="address" :receiver="receiver"/>
                     </div>
@@ -36,6 +36,7 @@
   const addressId = ref();
   const receiver = ref();
   const orderInfo = reactive({});
+  const orderInfoRef = ref();
 
   const initOrderInfo = (order) => {
       Object.assign(orderInfo, order);
@@ -55,8 +56,8 @@
   }
 
   const placeOrder = () => {
+      orderInfo.note = orderInfoRef.value.getOrderNote();
       console.log(orderInfo);
-      debugger;
       const skuKeyValue = orderInfo.sku.split("-");
       const itemSku = {}
       itemSku[skuKeyValue[0]] = skuKeyValue[1];
@@ -70,7 +71,8 @@
             quantity: orderInfo.amount,
             subtotal: orderInfo.price,
             itemSku
-        }]
+        }],
+        note: orderInfo.note
  
       }
       console.log(JSON.stringify(params))

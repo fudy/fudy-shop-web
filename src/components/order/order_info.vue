@@ -11,6 +11,9 @@
     <a-descriptions-item label="单价">{{orderInfo.price}}</a-descriptions-item>
     <a-descriptions-item label="数量">{{orderInfo.amount}}</a-descriptions-item>
     <a-descriptions-item label="小计">{{orderInfo.price * orderInfo.amount}}</a-descriptions-item>
+    <a-descriptions-item label="留言" :span="2" size="large">
+      <a-input v-model:value="note" placeholder="选填：填写和卖家沟通确认后的内容" />
+    </a-descriptions-item>
   </a-descriptions>
 </div>
 </template>
@@ -22,6 +25,7 @@ const emit = defineEmits(['inited']);
 const route = useRoute();
 const ordersStore = useOrdersStore();
 let orderInfo = reactive({});
+const note = ref();
 
 const initOrderInfo = (orderId) => {
   if (orderId) {
@@ -32,8 +36,16 @@ const initOrderInfo = (orderId) => {
   }
 }
 
+const getOrderNote = () => {
+  return note.value;
+}
+
 onMounted(()=> {
     initOrderInfo(route.query.orderId);
+});
+
+defineExpose({
+    getOrderNote
 });
 
 </script>
