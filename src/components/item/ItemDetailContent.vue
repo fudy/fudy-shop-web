@@ -119,12 +119,29 @@
             title: title.value
         }
         OrderApi.generateOrderID().then(result=> {
-            const orderId = result.data?.data;
-            ordersStore.addOrder(orderId, formState);
-            router.push({
-                path:'/confirm-order',
-                query: { orderId: orderId }
-            });
+            if(result.data?.success) {
+                const orderId = result.data?.data;
+                //跳转到订单确认页面
+                ordersStore.addOrder(orderId, formState);
+                router.push({
+                    path:'/confirm-order',
+                    query: { orderId: orderId }
+                });
+            } else {
+                if (result.data?.errMsg == "NOT_LOGIN") { 
+                    //未登录，跳转到登录页
+                    router.push({
+                        path:'/login',
+                        query: {}
+                    });
+                } else {
+                    //跳转到错误页面
+                    router.push({
+                        path:'/error'
+                    });
+                }
+            }
+
         })
 
     }
