@@ -2,8 +2,8 @@
   <div style="margin:0px 30px"> 
     
         <a-form :model="formState" :rules="rules" ref="formRef">
-            <a-form-item name="userName">
-                <a-input v-model:value="formState.userName" placeholder="用户名" size="large">
+            <a-form-item name="username">
+                <a-input v-model:value="formState.username" placeholder="用户名" size="large">
                     <template #prefix><UserOutlined class="icon" /></template>
                 </a-input>
             </a-form-item>
@@ -49,9 +49,9 @@ import {useUserStore} from '@/stores/user';
 const user = useUserStore();
 
 const formState = reactive({
-    userName: '',
+    username: '',
     password: '',
-    imageCaptch:''
+    imageCaptcha:''
 });
 
 const formRef = ref();
@@ -60,7 +60,7 @@ const errMessage = ref();
 const imageSrc = ref(IMAGE_CAPTCHA_SRC);
 //表单校验规则
 const rules = {
-    userName: [
+    username: [
         { required: true, message: '用户名不能为空', trigger: 'blur'},
         { min: 4, max:16, message: '用户名长度为4-16个字符', trigger: 'change'}
     ],
@@ -81,7 +81,7 @@ const imageClick = () => {
 const invokeLogin = () => {
     login(formState, (res)=> {
         if(res.success) {
-            user.userName = res.data.userName;
+            user.username = res.data.username;
             user.avatar = res.data.avatar;
             //登录成功，跳转到首页
             router.push({name:'index'});
