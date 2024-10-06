@@ -27,12 +27,13 @@ import { sendLoginCaptcha } from '@/api/captcha';
 import { message } from 'ant-design-vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
 import { smsLogin } from '@/api/user';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 
 const errMessage = ref();
 const formRef = ref();
 const router = useRouter();
+const route = useRoute();
 const formState = reactive({
     phone: '',
     captcha: ''
@@ -94,8 +95,13 @@ const sendCaptcha = () => {
 const invokeSmsLogin = () => {
     smsLogin(formState, (res)=> {
         if(res.success) {
-            //登录成功，跳转到首页
-            router.push({name:'index'});
+            if (route.query.redirectURL) {
+                //登录成功，跳转到原来的页面
+                window.location.href = decodeURIComponent(route.query.redirectURL);
+            } else {
+                //登录成功，跳转到首页
+                router.push({name:'index'});
+            }
         } else {
             errMessage.value = res.errMsg;
         }

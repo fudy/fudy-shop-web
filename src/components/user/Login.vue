@@ -41,13 +41,13 @@
 <script setup>
 import { defineComponent, reactive, toRaw, ref } from 'vue';
 import { UserOutlined, LockOutlined,SafetyOutlined } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { login } from '@/api/user';
 import {IMAGE_CAPTCHA_SRC} from '@/api/captcha';
 import {useUserStore} from '@/stores/user';
 
 const user = useUserStore();
-
+const route = useRoute();
 const formState = reactive({
     username: '',
     password: '',
@@ -83,8 +83,14 @@ const invokeLogin = () => {
         if(res.success) {
             user.username = res.data.username;
             user.avatar = res.data.avatar;
-            //登录成功，跳转到首页
-            router.push({name:'index'});
+            debugger
+            if (route.query.redirectURL) {
+                //登录成功，跳转到原来的页面
+                window.location.href = decodeURIComponent(route.query.redirectURL);
+            } else {
+                //登录成功，跳转到首页
+                router.push({name:'index'});
+            }
         } else {
             errMessage.value = res.errMsg;
             imageClick();

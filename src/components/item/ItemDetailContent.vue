@@ -132,7 +132,9 @@
                     //未登录，跳转到登录页
                     router.push({
                         path:'/login',
-                        query: {}
+                        query: {
+                            redirectURL : encodeURIComponent(window.location.href)
+                        }
                     });
                 } else {
                     //跳转到错误页面
